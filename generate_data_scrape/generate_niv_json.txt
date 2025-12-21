@@ -1,0 +1,24 @@
+ Line 38 is the key:
+  book_folders = sorted([d for d in base_path.iterdir() if d.is_dir()])
+
+  This gets all subdirectories in the base directory (. by default, or whatever path you pass as an argument).
+
+  The flow:
+  1. Scans the current directory for all subdirectories (e.g., Genesis/, John/, Psalms/, Revelation/)
+  2. For each subdirectory, finds all .txt files inside (lines 45-48)
+  3. Extracts chapter numbers from filenames like genesis_chapter_01.txt using regex (line 17-19)
+  4. Reads each chapter's content and builds a nested dictionary
+  5. Outputs everything to a single JSON file
+
+  Usage:
+  # Scan current directory, output to bible_niv.json
+  python generate_niv_json.py
+
+  # Scan specific directory
+  python generate_niv_json.py /path/to/books
+
+  # Specify output file
+  python generate_niv_json.py /path/to/books bible_niv.json
+
+  So if you have 4 folders, it finds all 4. If you add a 5th book folder, it will automatically include that too on the next run.
+
