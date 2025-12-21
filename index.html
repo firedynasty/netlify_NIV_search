@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Matthew Henry Commentary Search</title>
+  <title>NIV Bible Search</title>
   <style>
     * {
       box-sizing: border-box;
@@ -308,6 +308,18 @@
       background: #0f3460;
     }
 
+    .context mark {
+      background: #ffeb3b;
+      color: #333;
+      padding: 1px 2px;
+      border-radius: 2px;
+    }
+
+    body.dark-mode .context mark {
+      background: #ffc107;
+      color: #000;
+    }
+
     .loading {
       text-align: center;
       color: #666;
@@ -421,8 +433,8 @@
       min-width: 150px;
     }
 
-    /* Reference item */
-    .ref-item {
+    /* Chapter item */
+    .chapter-item {
       background: #fff;
       border: 1px solid #ddd;
       border-radius: 8px;
@@ -430,39 +442,34 @@
       margin-bottom: 10px;
     }
 
-    body.dark-mode .ref-item {
+    body.dark-mode .chapter-item {
       background: #16213e;
       border-color: transparent;
     }
 
-    .ref-header {
+    .chapter-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 6px;
     }
 
-    .ref-passage {
+    .chapter-link {
       font-weight: 600;
       color: #2070c0;
       font-size: 14px;
       text-decoration: none;
     }
 
-    .ref-passage:hover {
+    .chapter-link:hover {
       text-decoration: underline;
     }
 
-    body.dark-mode .ref-passage {
+    body.dark-mode .chapter-link {
       color: #4a9eff;
     }
 
-    .ref-display {
-      font-size: 12px;
-      color: #888;
-    }
-
-    .ref-context {
+    .chapter-text {
       font-size: inherit;
       line-height: 1.6;
       color: #444;
@@ -470,9 +477,11 @@
       background: #f0f4f8;
       border-radius: 4px;
       border-left: 3px solid #4a9eff;
+      max-height: 200px;
+      overflow-y: auto;
     }
 
-    body.dark-mode .ref-context {
+    body.dark-mode .chapter-text {
       color: #ccc;
       background: #0f3460;
     }
@@ -488,21 +497,21 @@
       color: #aaa;
     }
 
-    .ref-count {
+    .chapter-count {
       text-align: center;
       color: #666;
       margin-bottom: 16px;
       font-size: 14px;
     }
 
-    body.dark-mode .ref-count {
+    body.dark-mode .chapter-count {
       color: #888;
     }
   </style>
 </head>
 <body>
   <div class="header-row">
-    <h1>Matthew Henry Commentary</h1>
+    <h1>NIV Bible Search</h1>
     <button class="theme-toggle" onclick="toggleTheme()">Dark Mode</button>
   </div>
 
@@ -510,7 +519,7 @@
   <div class="tabs">
     <span class="tabs-label">Mode:</span>
     <button class="tab-btn active" onclick="switchTab('search')">Keyword Search</button>
-    <button class="tab-btn" onclick="switchTab('browse')">Browse References</button>
+    <button class="tab-btn" onclick="switchTab('browse')">Browse Chapters</button>
   </div>
 
   <!-- Search Tab -->
@@ -519,109 +528,47 @@
       <div class="input-row">
         <input type="text" id="keyword" placeholder="Search keyword (e.g., love, grace)" autofocus>
         <select id="book">
-        <option value="">All Books</option>
-        <optgroup label="Old Testament">
+          <option value="">All Books</option>
           <option value="genesis">Genesis</option>
-          <option value="exodus">Exodus</option>
-          <option value="leviticus">Leviticus</option>
-          <option value="numbers">Numbers</option>
-          <option value="deuteronomy">Deuteronomy</option>
-          <option value="joshua">Joshua</option>
-          <option value="judges">Judges</option>
-          <option value="ruth">Ruth</option>
-          <option value="1samuel">1 Samuel</option>
-          <option value="2samuel">2 Samuel</option>
-          <option value="1kings">1 Kings</option>
-          <option value="2kings">2 Kings</option>
-          <option value="1chronicles">1 Chronicles</option>
-          <option value="2chronicles">2 Chronicles</option>
-          <option value="ezra">Ezra</option>
-          <option value="nehemiah">Nehemiah</option>
-          <option value="esther">Esther</option>
-          <option value="job">Job</option>
           <option value="psalms">Psalms</option>
-          <option value="proverbs">Proverbs</option>
-          <option value="ecclesiastes">Ecclesiastes</option>
-          <option value="song">Song of Solomon</option>
-          <option value="isaiah">Isaiah</option>
-          <option value="jeremiah">Jeremiah</option>
-          <option value="lamentations">Lamentations</option>
-          <option value="ezekiel">Ezekiel</option>
-          <option value="daniel">Daniel</option>
-          <option value="hosea">Hosea</option>
-          <option value="joel">Joel</option>
-          <option value="amos">Amos</option>
-          <option value="obadiah">Obadiah</option>
-          <option value="jonah">Jonah</option>
-          <option value="micah">Micah</option>
-          <option value="nahum">Nahum</option>
-          <option value="habakkuk">Habakkuk</option>
-          <option value="zephaniah">Zephaniah</option>
-          <option value="haggai">Haggai</option>
-          <option value="zechariah">Zechariah</option>
-          <option value="malachi">Malachi</option>
-        </optgroup>
-        <optgroup label="New Testament">
-          <option value="matthew">Matthew</option>
-          <option value="mark">Mark</option>
-          <option value="luke">Luke</option>
           <option value="john">John</option>
-          <option value="acts">Acts</option>
           <option value="romans">Romans</option>
-          <option value="1corinthians">1 Corinthians</option>
-          <option value="2corinthians">2 Corinthians</option>
-          <option value="galatians">Galatians</option>
-          <option value="ephesians">Ephesians</option>
-          <option value="philippians">Philippians</option>
-          <option value="colossians">Colossians</option>
-          <option value="1thessalonians">1 Thessalonians</option>
-          <option value="2thessalonians">2 Thessalonians</option>
-          <option value="1timothy">1 Timothy</option>
-          <option value="2timothy">2 Timothy</option>
-          <option value="titus">Titus</option>
-          <option value="philemon">Philemon</option>
-          <option value="hebrews">Hebrews</option>
-          <option value="james">James</option>
-          <option value="1peter">1 Peter</option>
-          <option value="2peter">2 Peter</option>
-          <option value="1john">1 John</option>
-          <option value="2john">2 John</option>
-          <option value="3john">3 John</option>
-          <option value="jude">Jude</option>
-          <option value="revelation">Revelation</option>
-        </optgroup>
-      </select>
-    </div>
-    <div class="button-row">
-      <button type="submit" id="searchBtn">Search</button>
-      <div class="font-controls">
-        <button type="button" class="font-btn" onclick="changeFontSize(-1)">-</button>
-        <button type="button" class="font-btn" onclick="changeFontSize(1)">+</button>
+        </select>
       </div>
-    </div>
-  </form>
+      <div class="button-row">
+        <button type="submit" id="searchBtn">Search</button>
+        <div class="font-controls">
+          <button type="button" class="font-btn" onclick="changeFontSize(-1)">-</button>
+          <button type="button" class="font-btn" onclick="changeFontSize(1)">+</button>
+        </div>
+      </div>
+    </form>
 
     <div id="output">
       <div class="help">
-        <p>Search through Matthew Henry's Complete Commentary on the Whole Bible.</p>
+        <p>Search through the NIV Bible (Genesis, Psalms, John, Romans).</p>
         <p>Examples:</p>
         <ul>
           <li><code>love</code> - search all books</li>
-          <li><code>grace</code> + Psalms - search only Psalms</li>
+          <li><code>beginning</code> + Genesis - search only Genesis</li>
           <li><code>eternal life</code> + John - search Gospel of John</li>
         </ul>
       </div>
     </div>
   </div>
 
-  <!-- Browse References Tab -->
+  <!-- Browse Chapters Tab -->
   <div id="browse-tab" class="tab-content">
     <div class="browse-form">
       <div class="browse-row">
         <select id="browse-book" onchange="onBookChange()">
           <option value="">Select Book</option>
+          <option value="genesis">Genesis (50 chapters)</option>
+          <option value="psalms">Psalms (150 chapters)</option>
+          <option value="john">John (21 chapters)</option>
+          <option value="romans">Romans (15 chapters)</option>
         </select>
-        <select id="browse-chapter" onchange="loadReferences()">
+        <select id="browse-chapter" onchange="loadChapter()">
           <option value="">Select Chapter</option>
         </select>
       </div>
@@ -634,16 +581,23 @@
     </div>
     <div id="browse-output">
       <div class="help">
-        <p>Browse cross-references cited by Matthew Henry in his commentary.</p>
-        <p>Select a book and chapter to see all Bible passages referenced in that section.</p>
+        <p>Browse chapters from the NIV Bible.</p>
+        <p>Select a book and chapter to read.</p>
       </div>
     </div>
   </div>
 
   <script>
-    const API_URL = '/.netlify/functions/search';
+    const API_URL = '/.netlify/functions/niv-search';
     const BIBLE_APP_URL = 'https://cdpn.io/pen/debug/KwVxmKR';
-    let bookStructure = null;
+
+    // Chapter counts for each book
+    const BOOK_CHAPTERS = {
+      'genesis': 50,
+      'psalms': 150,
+      'john': 21,
+      'romans': 15
+    };
 
     // Tab switching
     function switchTab(tabName) {
@@ -652,107 +606,46 @@
 
       document.querySelector(`[onclick="switchTab('${tabName}')"]`).classList.add('active');
       document.getElementById(`${tabName}-tab`).classList.add('active');
-
-      // Load book structure if switching to browse and not loaded yet
-      if (tabName === 'browse' && !bookStructure) {
-        loadBookStructure();
-      }
     }
 
-    // Load book structure for browse dropdowns
-    async function loadBookStructure() {
-      try {
-        const response = await fetch(`${API_URL}?action=structure`);
-        const data = await response.json();
-        bookStructure = data.bookStructure;
-        populateBookDropdown();
-      } catch (err) {
-        console.error('Failed to load book structure:', err);
-      }
+    // Generate CodePen Bible URL
+    function getBibleUrl(bookKey, chapter) {
+      return `${BIBLE_APP_URL}?${bookKey}&${chapter}`;
     }
 
-    function populateBookDropdown() {
-      const select = document.getElementById('browse-book');
-      select.innerHTML = '<option value="">Select Book</option>';
-
-      // Sort by book code to maintain Bible order
-      const sortedCodes = Object.keys(bookStructure).sort((a, b) => parseInt(a) - parseInt(b));
-
-      let currentTestament = null;
-      for (const code of sortedCodes) {
-        const book = bookStructure[code];
-        if (code === '00') continue; // Skip preface
-
-        // Add testament headers
-        const codeNum = parseInt(code);
-        if (codeNum >= 1 && codeNum <= 39 && currentTestament !== 'OT') {
-          const optgroup = document.createElement('optgroup');
-          optgroup.label = 'Old Testament';
-          select.appendChild(optgroup);
-          currentTestament = 'OT';
-        } else if (codeNum >= 40 && currentTestament !== 'NT') {
-          const optgroup = document.createElement('optgroup');
-          optgroup.label = 'New Testament';
-          select.appendChild(optgroup);
-          currentTestament = 'NT';
-        }
-
-        const option = document.createElement('option');
-        option.value = code;
-        option.textContent = `${book.name} (${book.chapters.length} ch)`;
-        select.lastElementChild.appendChild(option);
-      }
-    }
-
+    // Populate chapter dropdown when book changes
     function onBookChange() {
-      const bookCode = document.getElementById('browse-book').value;
+      const bookKey = document.getElementById('browse-book').value;
       const chapterSelect = document.getElementById('browse-chapter');
       chapterSelect.innerHTML = '<option value="">Select Chapter</option>';
 
-      if (!bookCode || !bookStructure[bookCode]) {
+      if (!bookKey || !BOOK_CHAPTERS[bookKey]) {
         document.getElementById('browse-output').innerHTML = '';
         return;
       }
 
-      const chapters = bookStructure[bookCode].chapters;
-      for (const ch of chapters) {
+      const numChapters = BOOK_CHAPTERS[bookKey];
+      for (let i = 1; i <= numChapters; i++) {
         const option = document.createElement('option');
-        option.value = ch;
-        option.textContent = `Chapter ${ch}`;
+        option.value = i;
+        option.textContent = `Chapter ${i}`;
         chapterSelect.appendChild(option);
       }
     }
 
-    // Convert book name to URL-friendly format for CodePen Bible app
-    function bookToUrlParam(bookName) {
-      return bookName.toLowerCase().replace(/\s+/g, '');
-    }
-
-    // Generate CodePen Bible URL from reference
-    function getBibleUrl(ref) {
-      const book = bookToUrlParam(ref.book);
-      const chapter = ref.chapter;
-      const verses = ref.verses;
-
-      if (verses) {
-        return `${BIBLE_APP_URL}?${book}&${chapter}:${verses}`;
-      }
-      return `${BIBLE_APP_URL}?${book}&${chapter}`;
-    }
-
-    async function loadReferences() {
-      const bookCode = document.getElementById('browse-book').value;
+    async function loadChapter() {
+      const bookKey = document.getElementById('browse-book').value;
       const chapter = document.getElementById('browse-chapter').value;
       const output = document.getElementById('browse-output');
 
-      if (!bookCode || !chapter) {
+      if (!bookKey || !chapter) {
         return;
       }
 
-      output.innerHTML = '<div class="loading">Loading references...</div>';
+      output.innerHTML = '<div class="loading">Loading chapter...</div>';
 
       try {
-        const response = await fetch(`${API_URL}?action=references&b=${bookCode}&c=${chapter}`);
+        const response = await fetch(`${API_URL}?action=chapter&b=${bookKey}&c=${chapter}`);
         const data = await response.json();
 
         if (data.error) {
@@ -760,28 +653,18 @@
           return;
         }
 
-        if (!data.references || data.references.length === 0) {
-          output.innerHTML = '<div class="no-results">No cross-references found in this chapter.</div>';
-          return;
-        }
+        const bibleUrl = getBibleUrl(data.bookKey, data.chapter);
 
-        let html = `<div class="passage-title">${data.title}</div>`;
-        html += `<div class="ref-count">${data.references.length} cross-references</div>`;
+        let html = `<div class="passage-title">${data.book} ${data.chapter}</div>`;
         html += '<div class="results">';
-
-        for (const ref of data.references) {
-          const bibleUrl = getBibleUrl(ref.ref);
-          html += `
-            <div class="ref-item">
-              <div class="ref-header">
-                <a href="${bibleUrl}" class="ref-passage" target="_blank">${ref.ref.display}</a>
-                <span class="ref-display">${ref.display}</span>
-              </div>
-              <div class="ref-context">${ref.context}</div>
+        html += `
+          <div class="chapter-item">
+            <div class="chapter-header">
+              <a href="${bibleUrl}" class="chapter-link" target="_blank">Open in Bible App</a>
             </div>
-          `;
-        }
-
+            <div class="chapter-text">${data.text}</div>
+          </div>
+        `;
         html += '</div>';
         output.innerHTML = html;
 
@@ -828,205 +711,6 @@
       applyFontSize();
     })();
 
-    // Map display book names to URL parameter format (lowercase, no spaces)
-    const bookToParam = {
-      'Genesis': 'genesis',
-      'Exodus': 'exodus',
-      'Leviticus': 'leviticus',
-      'Numbers': 'numbers',
-      'Deuteronomy': 'deuteronomy',
-      'Joshua': 'joshua',
-      'Judges': 'judges',
-      'Ruth': 'ruth',
-      '1 Samuel': '1samuel',
-      '2 Samuel': '2samuel',
-      '1 Kings': '1kings',
-      '2 Kings': '2kings',
-      '1 Chronicles': '1chronicles',
-      '2 Chronicles': '2chronicles',
-      'Ezra': 'ezra',
-      'Nehemiah': 'nehemiah',
-      'Esther': 'esther',
-      'Job': 'job',
-      'Psalms': 'psalms',
-      'Proverbs': 'proverbs',
-      'Ecclesiastes': 'ecclesiastes',
-      'Song of Solomon': 'song',
-      'Isaiah': 'isaiah',
-      'Jeremiah': 'jeremiah',
-      'Lamentations': 'lamentations',
-      'Ezekiel': 'ezekiel',
-      'Daniel': 'daniel',
-      'Hosea': 'hosea',
-      'Joel': 'joel',
-      'Amos': 'amos',
-      'Obadiah': 'obadiah',
-      'Jonah': 'jonah',
-      'Micah': 'micah',
-      'Nahum': 'nahum',
-      'Habakkuk': 'habakkuk',
-      'Zephaniah': 'zephaniah',
-      'Haggai': 'haggai',
-      'Zechariah': 'zechariah',
-      'Malachi': 'malachi',
-      'Matthew': 'matthew',
-      'Mark': 'mark',
-      'Luke': 'luke',
-      'John': 'john',
-      'Acts': 'acts',
-      'Romans': 'romans',
-      '1 Corinthians': '1corinthians',
-      '2 Corinthians': '2corinthians',
-      'Galatians': 'galatians',
-      'Ephesians': 'ephesians',
-      'Philippians': 'philippians',
-      'Colossians': 'colossians',
-      '1 Thessalonians': '1thessalonians',
-      '2 Thessalonians': '2thessalonians',
-      '1 Timothy': '1timothy',
-      '2 Timothy': '2timothy',
-      'Titus': 'titus',
-      'Philemon': 'philemon',
-      'Hebrews': 'hebrews',
-      'James': 'james',
-      '1 Peter': '1peter',
-      '2 Peter': '2peter',
-      '1 John': '1john',
-      '2 John': '2john',
-      '3 John': '3john',
-      'Jude': 'jude',
-      'Revelation': 'revelation'
-    };
-
-    // Roman numeral to number conversion
-    function romanToNumber(roman) {
-      if (!roman) return null;
-      roman = roman.toUpperCase().trim();
-
-      const romanNumerals = {
-        'I': 1, 'V': 5, 'X': 10, 'L': 50,
-        'C': 100, 'D': 500, 'M': 1000
-      };
-
-      let result = 0;
-      let prevValue = 0;
-
-      for (let i = roman.length - 1; i >= 0; i--) {
-        const char = roman[i];
-        const value = romanNumerals[char];
-
-        if (!value) return null; // Invalid Roman numeral character
-
-        if (value < prevValue) {
-          result -= value;
-        } else {
-          result += value;
-        }
-        prevValue = value;
-      }
-
-      return result > 0 ? result : null;
-    }
-
-    // Extract chapter number from title (e.g., "[Psalms XVI]." -> 16)
-    function extractChapter(title) {
-      // Match Roman numeral at end: [Book NAME]
-      const match = title.match(/\[.+?\s+([IVXLCDM]+)\]/i);
-      if (match) {
-        return romanToNumber(match[1]);
-      }
-      // Try Arabic numeral
-      const arabicMatch = title.match(/\[.+?\s+(\d+)\]/);
-      if (arabicMatch) {
-        return parseInt(arabicMatch[1]);
-      }
-      return null;
-    }
-
-    // Create Christianity.com Matthew Henry commentary URL
-    const COMMENTARY_URL = 'https://www.christianity.com/bible/commentary/matthew-henry-complete';
-
-    // Map book names to Christianity.com URL format
-    const bookToCommentaryParam = {
-      'Genesis': 'genesis',
-      'Exodus': 'exodus',
-      'Leviticus': 'leviticus',
-      'Numbers': 'numbers',
-      'Deuteronomy': 'deuteronomy',
-      'Joshua': 'joshua',
-      'Judges': 'judges',
-      'Ruth': 'ruth',
-      '1 Samuel': '1-samuel',
-      '2 Samuel': '2-samuel',
-      '1 Kings': '1-kings',
-      '2 Kings': '2-kings',
-      '1 Chronicles': '1-chronicles',
-      '2 Chronicles': '2-chronicles',
-      'Ezra': 'ezra',
-      'Nehemiah': 'nehemiah',
-      'Esther': 'esther',
-      'Job': 'job',
-      'Psalms': 'psalm',
-      'Proverbs': 'proverbs',
-      'Ecclesiastes': 'ecclesiastes',
-      'Song of Solomon': 'song-of-solomon',
-      'Isaiah': 'isaiah',
-      'Jeremiah': 'jeremiah',
-      'Lamentations': 'lamentations',
-      'Ezekiel': 'ezekiel',
-      'Daniel': 'daniel',
-      'Hosea': 'hosea',
-      'Joel': 'joel',
-      'Amos': 'amos',
-      'Obadiah': 'obadiah',
-      'Jonah': 'jonah',
-      'Micah': 'micah',
-      'Nahum': 'nahum',
-      'Habakkuk': 'habakkuk',
-      'Zephaniah': 'zephaniah',
-      'Haggai': 'haggai',
-      'Zechariah': 'zechariah',
-      'Malachi': 'malachi',
-      'Matthew': 'matthew',
-      'Mark': 'mark',
-      'Luke': 'luke',
-      'John': 'john',
-      'Acts': 'acts',
-      'Romans': 'romans',
-      '1 Corinthians': '1-corinthians',
-      '2 Corinthians': '2-corinthians',
-      'Galatians': 'galatians',
-      'Ephesians': 'ephesians',
-      'Philippians': 'philippians',
-      'Colossians': 'colossians',
-      '1 Thessalonians': '1-thessalonians',
-      '2 Thessalonians': '2-thessalonians',
-      '1 Timothy': '1-timothy',
-      '2 Timothy': '2-timothy',
-      'Titus': 'titus',
-      'Philemon': 'philemon',
-      'Hebrews': 'hebrews',
-      'James': 'james',
-      '1 Peter': '1-peter',
-      '2 Peter': '2-peter',
-      '1 John': '1-john',
-      '2 John': '2-john',
-      '3 John': '3-john',
-      'Jude': 'jude',
-      'Revelation': 'revelation'
-    };
-
-    function getBibleLink(bookName, title) {
-      const param = bookToCommentaryParam[bookName];
-      if (!param) return null;
-
-      const chapter = extractChapter(title);
-      if (chapter) {
-        return `${COMMENTARY_URL}/${param}/${chapter}`;
-      }
-      return `${COMMENTARY_URL}/${param}`;
-    }
-
     async function doSearch(e) {
       e.preventDefault();
 
@@ -1042,7 +726,7 @@
 
       btn.disabled = true;
       btn.textContent = 'Searching...';
-      output.innerHTML = '<div class="loading">Searching commentary...</div>';
+      output.innerHTML = '<div class="loading">Searching NIV Bible...</div>';
 
       try {
         const params = new URLSearchParams({ q: keyword });
@@ -1061,18 +745,17 @@
           return;
         }
 
-        let html = `<div class="stats">Found ${data.totalMatches} matches in ${data.fileCount} files</div>`;
+        let html = `<div class="stats">Found ${data.totalMatches} matches in ${data.chapterCount} chapters</div>`;
         html += '<div class="results">';
 
         for (const result of data.results) {
-          const bibleLink = getBibleLink(result.book, result.title);
-          const titleHtml = bibleLink
-            ? `<a href="${bibleLink}" class="result-title" target="_blank">${result.title}</a>`
-            : `<span class="result-title">${result.title}</span>`;
+          const bibleUrl = getBibleUrl(result.bookKey, result.chapter);
+          const displayTitle = `${result.book} ${result.chapter}`;
+
           html += `
             <div class="result-item">
               <div class="result-header">
-                ${titleHtml}
+                <a href="${bibleUrl}" class="result-title" target="_blank">${displayTitle}</a>
                 <span class="result-book">${result.book}</span>
               </div>
               <div class="result-count">${result.count} matches</div>
