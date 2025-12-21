@@ -589,7 +589,7 @@
 
   <script>
     const API_URL = '/.netlify/functions/niv-search';
-    const BIBLE_APP_URL = 'https://cdpn.io/pen/debug/KwVxmKR';
+    const BIBLE_GATEWAY_URL = 'https://www.biblegateway.com/passage/';
 
     // Chapter counts for each book
     const BOOK_CHAPTERS = {
@@ -597,6 +597,14 @@
       'psalms': 150,
       'john': 21,
       'romans': 15
+    };
+
+    // Book key to BibleGateway search term (psalms -> psalm)
+    const BOOK_SEARCH_NAMES = {
+      'genesis': 'genesis',
+      'psalms': 'psalm',
+      'john': 'john',
+      'romans': 'romans'
     };
 
     // Tab switching
@@ -608,9 +616,10 @@
       document.getElementById(`${tabName}-tab`).classList.add('active');
     }
 
-    // Generate CodePen Bible URL
+    // Generate BibleGateway URL
     function getBibleUrl(bookKey, chapter) {
-      return `${BIBLE_APP_URL}?${bookKey}&${chapter}`;
+      const searchName = BOOK_SEARCH_NAMES[bookKey] || bookKey;
+      return `${BIBLE_GATEWAY_URL}?search=${searchName}%20${chapter}&version=NIV`;
     }
 
     // Populate chapter dropdown when book changes
@@ -660,7 +669,7 @@
         html += `
           <div class="chapter-item">
             <div class="chapter-header">
-              <a href="${bibleUrl}" class="chapter-link" target="_blank">Open in Bible App</a>
+              <a href="${bibleUrl}" class="chapter-link" target="_blank">Open in BibleGateway</a>
             </div>
             <div class="chapter-text">${data.text}</div>
           </div>
