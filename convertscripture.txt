@@ -1,0 +1,389 @@
+/**
+ * Scripture Reference Converter
+ *
+ * Parses old-style scripture references like:
+ *   - "Deut. xxviii. 47"
+ *   - "Ps. cxix. 67"
+ *   - "1 Cor. vi. 2, 3"
+ *   - "Matt. v. 3-12"
+ *
+ * And converts them to clickable links like:
+ *   <a href="https://cdpn.io/pen/debug/KwVxmKR?deuteronomy&28:47" class="ref-passage" target="_blank">Deuteronomy 28:47</a>
+ */
+
+// Bible App URL for generating links
+const BIBLE_APP_URL = 'https://cdpn.io/pen/debug/KwVxmKR';
+
+// Book abbreviation mapping (old-style abbreviations to full names)
+const BOOK_ABBREVIATIONS = {
+  // Old Testament
+  'gen': 'Genesis', 'ge': 'Genesis',
+  'exod': 'Exodus', 'ex': 'Exodus', 'exo': 'Exodus',
+  'lev': 'Leviticus', 'le': 'Leviticus',
+  'num': 'Numbers', 'nu': 'Numbers', 'numb': 'Numbers',
+  'deut': 'Deuteronomy', 'de': 'Deuteronomy', 'deu': 'Deuteronomy',
+  'josh': 'Joshua', 'jos': 'Joshua',
+  'judg': 'Judges', 'jud': 'Judges', 'jg': 'Judges',
+  'ruth': 'Ruth', 'ru': 'Ruth', 'rut': 'Ruth',
+  '1 sam': '1 Samuel', '1sam': '1 Samuel', '1sa': '1 Samuel',
+  '2 sam': '2 Samuel', '2sam': '2 Samuel', '2sa': '2 Samuel',
+  '1 ki': '1 Kings', '1ki': '1 Kings', '1 kings': '1 Kings', '1kin': '1 Kings',
+  '2 ki': '2 Kings', '2ki': '2 Kings', '2 kings': '2 Kings', '2kin': '2 Kings',
+  '1 chr': '1 Chronicles', '1chr': '1 Chronicles', '1 chron': '1 Chronicles',
+  '2 chr': '2 Chronicles', '2chr': '2 Chronicles', '2 chron': '2 Chronicles',
+  'ezr': 'Ezra', 'ezra': 'Ezra',
+  'neh': 'Nehemiah', 'ne': 'Nehemiah',
+  'esth': 'Esther', 'est': 'Esther', 'es': 'Esther',
+  'job': 'Job',
+  'ps': 'Psalms', 'psa': 'Psalms', 'psalm': 'Psalms', 'psal': 'Psalms',
+  'prov': 'Proverbs', 'pro': 'Proverbs', 'pr': 'Proverbs',
+  'eccl': 'Ecclesiastes', 'eccles': 'Ecclesiastes', 'ecc': 'Ecclesiastes', 'ec': 'Ecclesiastes',
+  'cant': 'Song of Solomon', 'song': 'Song of Solomon', 'sos': 'Song of Solomon', 'so': 'Song of Solomon',
+  'isa': 'Isaiah', 'is': 'Isaiah', 'isai': 'Isaiah',
+  'jer': 'Jeremiah', 'je': 'Jeremiah',
+  'lam': 'Lamentations', 'la': 'Lamentations',
+  'ezek': 'Ezekiel', 'eze': 'Ezekiel', 'ez': 'Ezekiel',
+  'dan': 'Daniel', 'da': 'Daniel',
+  'hos': 'Hosea', 'ho': 'Hosea',
+  'joel': 'Joel', 'joe': 'Joel',
+  'amos': 'Amos', 'am': 'Amos', 'amo': 'Amos',
+  'obad': 'Obadiah', 'ob': 'Obadiah', 'oba': 'Obadiah',
+  'jon': 'Jonah', 'jonah': 'Jonah', 'jona': 'Jonah',
+  'mic': 'Micah', 'mi': 'Micah',
+  'nah': 'Nahum', 'na': 'Nahum',
+  'hab': 'Habakkuk', 'habak': 'Habakkuk',
+  'zeph': 'Zephaniah', 'zep': 'Zephaniah',
+  'hag': 'Haggai',
+  'zech': 'Zechariah', 'zec': 'Zechariah',
+  'mal': 'Malachi',
+  // New Testament
+  'matt': 'Matthew', 'mat': 'Matthew', 'mt': 'Matthew',
+  'mark': 'Mark', 'mk': 'Mark', 'mar': 'Mark',
+  'luke': 'Luke', 'luk': 'Luke', 'lu': 'Luke', 'lk': 'Luke',
+  'john': 'John', 'joh': 'John', 'jn': 'John',
+  'acts': 'Acts', 'act': 'Acts', 'ac': 'Acts',
+  'rom': 'Romans', 'ro': 'Romans',
+  '1 cor': '1 Corinthians', '1cor': '1 Corinthians', '1co': '1 Corinthians',
+  '2 cor': '2 Corinthians', '2cor': '2 Corinthians', '2co': '2 Corinthians',
+  'gal': 'Galatians', 'ga': 'Galatians',
+  'eph': 'Ephesians',
+  'phil': 'Philippians', 'php': 'Philippians',
+  'col': 'Colossians',
+  '1 thess': '1 Thessalonians', '1thess': '1 Thessalonians', '1th': '1 Thessalonians',
+  '2 thess': '2 Thessalonians', '2thess': '2 Thessalonians', '2th': '2 Thessalonians',
+  '1 tim': '1 Timothy', '1tim': '1 Timothy', '1ti': '1 Timothy',
+  '2 tim': '2 Timothy', '2tim': '2 Timothy', '2ti': '2 Timothy',
+  'tit': 'Titus', 'titus': 'Titus',
+  'philem': 'Philemon', 'phm': 'Philemon', 'phile': 'Philemon',
+  'heb': 'Hebrews',
+  'jam': 'James', 'jas': 'James', 'james': 'James',
+  '1 pet': '1 Peter', '1pet': '1 Peter', '1pe': '1 Peter',
+  '2 pet': '2 Peter', '2pet': '2 Peter', '2pe': '2 Peter',
+  '1 john': '1 John', '1joh': '1 John', '1jo': '1 John', '1jn': '1 John',
+  '2 john': '2 John', '2joh': '2 John', '2jo': '2 John', '2jn': '2 John',
+  '3 john': '3 John', '3joh': '3 John', '3jo': '3 John', '3jn': '3 John',
+  'jude': 'Jude',
+  'rev': 'Revelation', 're': 'Revelation', 'revel': 'Revelation',
+};
+
+// Book name to URL parameter (lowercase, no spaces)
+const BOOK_TO_URL = {
+  'Genesis': 'genesis',
+  'Exodus': 'exodus',
+  'Leviticus': 'leviticus',
+  'Numbers': 'numbers',
+  'Deuteronomy': 'deuteronomy',
+  'Joshua': 'joshua',
+  'Judges': 'judges',
+  'Ruth': 'ruth',
+  '1 Samuel': '1samuel',
+  '2 Samuel': '2samuel',
+  '1 Kings': '1kings',
+  '2 Kings': '2kings',
+  '1 Chronicles': '1chronicles',
+  '2 Chronicles': '2chronicles',
+  'Ezra': 'ezra',
+  'Nehemiah': 'nehemiah',
+  'Esther': 'esther',
+  'Job': 'job',
+  'Psalms': 'psalms',
+  'Proverbs': 'proverbs',
+  'Ecclesiastes': 'ecclesiastes',
+  'Song of Solomon': 'song',
+  'Isaiah': 'isaiah',
+  'Jeremiah': 'jeremiah',
+  'Lamentations': 'lamentations',
+  'Ezekiel': 'ezekiel',
+  'Daniel': 'daniel',
+  'Hosea': 'hosea',
+  'Joel': 'joel',
+  'Amos': 'amos',
+  'Obadiah': 'obadiah',
+  'Jonah': 'jonah',
+  'Micah': 'micah',
+  'Nahum': 'nahum',
+  'Habakkuk': 'habakkuk',
+  'Zephaniah': 'zephaniah',
+  'Haggai': 'haggai',
+  'Zechariah': 'zechariah',
+  'Malachi': 'malachi',
+  'Matthew': 'matthew',
+  'Mark': 'mark',
+  'Luke': 'luke',
+  'John': 'john',
+  'Acts': 'acts',
+  'Romans': 'romans',
+  '1 Corinthians': '1corinthians',
+  '2 Corinthians': '2corinthians',
+  'Galatians': 'galatians',
+  'Ephesians': 'ephesians',
+  'Philippians': 'philippians',
+  'Colossians': 'colossians',
+  '1 Thessalonians': '1thessalonians',
+  '2 Thessalonians': '2thessalonians',
+  '1 Timothy': '1timothy',
+  '2 Timothy': '2timothy',
+  'Titus': 'titus',
+  'Philemon': 'philemon',
+  'Hebrews': 'hebrews',
+  'James': 'james',
+  '1 Peter': '1peter',
+  '2 Peter': '2peter',
+  '1 John': '1john',
+  '2 John': '2john',
+  '3 John': '3john',
+  'Jude': 'jude',
+  'Revelation': 'revelation',
+};
+
+/**
+ * Convert Roman numerals to Arabic numbers
+ * Handles: i, v, x, l, c, d, m (case insensitive)
+ * Examples: "xxviii" -> 28, "cxix" -> 119, "vi" -> 6
+ */
+function romanToArabic(roman) {
+  if (!roman) return null;
+  roman = roman.toUpperCase().trim();
+
+  // If it's already a number, return it
+  if (/^\d+$/.test(roman)) {
+    return parseInt(roman);
+  }
+
+  const values = {
+    'I': 1, 'V': 5, 'X': 10, 'L': 50,
+    'C': 100, 'D': 500, 'M': 1000
+  };
+
+  let result = 0;
+  let prevValue = 0;
+
+  for (let i = roman.length - 1; i >= 0; i--) {
+    const char = roman[i];
+    const value = values[char];
+
+    if (!value) return null; // Invalid character
+
+    if (value < prevValue) {
+      result -= value; // Subtractive notation (e.g., IV = 4)
+    } else {
+      result += value;
+    }
+    prevValue = value;
+  }
+
+  return result > 0 ? result : null;
+}
+
+/**
+ * Normalize book abbreviation to full name
+ * Handles periods and various abbreviation styles
+ * Examples: "Deut." -> "Deuteronomy", "1 Cor." -> "1 Corinthians"
+ */
+function normalizeBook(abbr) {
+  if (!abbr) return null;
+
+  // Remove trailing period and extra whitespace
+  let cleaned = abbr.replace(/\.\s*$/, '').trim().toLowerCase();
+
+  // Try direct lookup
+  if (BOOK_ABBREVIATIONS[cleaned]) {
+    return BOOK_ABBREVIATIONS[cleaned];
+  }
+
+  // Try without spaces
+  cleaned = cleaned.replace(/\s+/g, '');
+  if (BOOK_ABBREVIATIONS[cleaned]) {
+    return BOOK_ABBREVIATIONS[cleaned];
+  }
+
+  // Try partial match
+  for (const [key, value] of Object.entries(BOOK_ABBREVIATIONS)) {
+    if (key.startsWith(cleaned) || cleaned.startsWith(key.replace(/\s+/g, ''))) {
+      return value;
+    }
+  }
+
+  return null;
+}
+
+/**
+ * Parse an old-style scripture reference
+ *
+ * Input formats supported:
+ *   - "Deut. xxviii. 47"      -> { book: "Deuteronomy", chapter: 28, verses: "47" }
+ *   - "Ps. cxix. 67, 71"      -> { book: "Psalms", chapter: 119, verses: "67, 71" }
+ *   - "1 Cor. vi. 2, 3"       -> { book: "1 Corinthians", chapter: 6, verses: "2, 3" }
+ *   - "Matt. v. 3-12"         -> { book: "Matthew", chapter: 5, verses: "3-12" }
+ *   - "Gen. i. 1"             -> { book: "Genesis", chapter: 1, verses: "1" }
+ *   - "Ps. xxiii"             -> { book: "Psalms", chapter: 23, verses: "" }
+ *
+ * Returns: { book, chapter, verses, display } or null if invalid
+ */
+function parseOldStyleReference(refString) {
+  if (!refString) return null;
+
+  // Normalize whitespace
+  let ref = refString.trim().replace(/\s+/g, ' ');
+
+  // Pattern for old-style references:
+  // (book abbreviation with optional number prefix). (roman or arabic chapter). (optional verses)
+  // Examples: "Deut. xxviii. 47", "1 Cor. vi. 2", "Ps. cxix. 67, 71"
+
+  // Match pattern: [optional number + space] + book + period + chapter (roman/arabic) + optional period + optional verses
+  const pattern = /^(\d?\s*[A-Za-z]+)\.\s*([ivxlcdmIVXLCDM]+|\d+)\.?\s*(.*)$/;
+
+  const match = ref.match(pattern);
+  if (!match) {
+    // Try simpler pattern without strict period requirement
+    const simplePattern = /^(\d?\s*[A-Za-z]+)\s+([ivxlcdmIVXLCDM]+|\d+)[:\.\s]+(.*)$/;
+    const simpleMatch = ref.match(simplePattern);
+    if (!simpleMatch) return null;
+
+    const book = normalizeBook(simpleMatch[1]);
+    const chapter = romanToArabic(simpleMatch[2]);
+    const verses = simpleMatch[3].trim();
+
+    if (!book || !chapter) return null;
+
+    return {
+      book,
+      chapter,
+      verses,
+      display: `${book} ${chapter}${verses ? ':' + verses : ''}`
+    };
+  }
+
+  const book = normalizeBook(match[1]);
+  const chapter = romanToArabic(match[2]);
+  const verses = match[3].trim();
+
+  if (!book || !chapter) return null;
+
+  return {
+    book,
+    chapter,
+    verses,
+    display: `${book} ${chapter}${verses ? ':' + verses : ''}`
+  };
+}
+
+/**
+ * Generate Bible app URL from parsed reference
+ */
+function getBibleUrl(parsedRef) {
+  if (!parsedRef) return null;
+
+  const bookParam = BOOK_TO_URL[parsedRef.book];
+  if (!bookParam) return null;
+
+  if (parsedRef.verses) {
+    return `${BIBLE_APP_URL}?${bookParam}&${parsedRef.chapter}:${parsedRef.verses}`;
+  }
+  return `${BIBLE_APP_URL}?${bookParam}&${parsedRef.chapter}`;
+}
+
+/**
+ * Convert old-style reference string to HTML link
+ *
+ * Input: "Deut. xxviii. 47"
+ * Output: <a href="https://cdpn.io/pen/debug/KwVxmKR?deuteronomy&28:47" class="ref-passage" target="_blank">Deuteronomy 28:47</a>
+ */
+function convertToLink(refString) {
+  const parsed = parseOldStyleReference(refString);
+  if (!parsed) return refString; // Return original if can't parse
+
+  const url = getBibleUrl(parsed);
+  if (!url) return refString;
+
+  return `<a href="${url}" class="ref-passage" target="_blank">${parsed.display}</a>`;
+}
+
+/**
+ * Find and replace all scripture references in text with links
+ * This regex finds patterns like "Deut. xxviii. 47" in running text
+ */
+function linkifyScriptureReferences(text) {
+  // Pattern to find old-style references in text
+  // Matches: Book. Chapter(roman). Verses (optional)
+  const refPattern = /\b(\d?\s*[A-Za-z]{2,})\.\s*([ivxlcdmIVXLCDM]+|\d+)\.?\s*([\d,\-\s]*(?:,\s*[\d\-]+)*)/gi;
+
+  return text.replace(refPattern, (match) => {
+    const parsed = parseOldStyleReference(match);
+    if (parsed) {
+      const url = getBibleUrl(parsed);
+      if (url) {
+        return `<a href="${url}" class="ref-passage" target="_blank">${parsed.display}</a>`;
+      }
+    }
+    return match; // Return original if can't parse
+  });
+}
+
+// ============================================================
+// USAGE EXAMPLES
+// ============================================================
+
+// Example 1: Parse a single reference
+console.log(parseOldStyleReference("Deut. xxviii. 47"));
+// Output: { book: "Deuteronomy", chapter: 28, verses: "47", display: "Deuteronomy 28:47" }
+
+console.log(parseOldStyleReference("Ps. cxix. 67"));
+// Output: { book: "Psalms", chapter: 119, verses: "67", display: "Psalms 119:67" }
+
+console.log(parseOldStyleReference("1 Cor. vi. 2, 3"));
+// Output: { book: "1 Corinthians", chapter: 6, verses: "2, 3", display: "1 Corinthians 6:2, 3" }
+
+// Example 2: Convert to link
+console.log(convertToLink("Deut. xxviii. 47"));
+// Output: <a href="https://cdpn.io/pen/debug/KwVxmKR?deuteronomy&28:47" class="ref-passage" target="_blank">Deuteronomy 28:47</a>
+
+// Example 3: Roman numeral conversion
+console.log(romanToArabic("xxviii")); // 28
+console.log(romanToArabic("cxix"));   // 119
+console.log(romanToArabic("vi"));     // 6
+console.log(romanToArabic("xlvii"));  // 47
+
+// Example 4: Linkify text with embedded references
+const sampleText = "As it says in Deut. xxviii. 47 and also in Ps. cxix. 67, we see...";
+console.log(linkifyScriptureReferences(sampleText));
+// Output: As it says in <a href="...">Deuteronomy 28:47</a> and also in <a href="...">Psalms 119:67</a>, we see...
+
+// ============================================================
+// INTEGRATION INTO EXISTING APP
+// ============================================================
+
+/*
+To integrate this into the Matthew Henry Commentary app:
+
+1. Add the functions to index.html inside the <script> tag
+
+2. In the loadReferences() function, after getting the context, call:
+   ref.context = linkifyScriptureReferences(ref.context);
+
+3. Or when displaying search results, call:
+   result.contexts = result.contexts.map(ctx => linkifyScriptureReferences(ctx));
+
+This will automatically convert any old-style references found in the
+commentary text into clickable links.
+*/

@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NIV Bible Search</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      padding: 16px;
+      min-height: 100vh;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    /* Light mode (default) */
+    body {
+      background: #f5f5f5;
+      color: #333;
+    }
+
+    /* Dark mode */
+    body.dark-mode {
+      background: #1a1a2e;
+      color: #eee;
+    }
+
+    .header-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      margin-bottom: 16px;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin: 0;
+      text-align: center;
+    }
+
+    body.dark-mode h1 {
+      color: #fff;
+    }
+
+    .theme-toggle {
+      position: absolute;
+      right: 0;
+      padding: 8px 12px;
+      font-size: 14px;
+      background: #e0e0e0;
+      color: #333;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    body.dark-mode .theme-toggle {
+      background: #16213e;
+      color: #eee;
+      border-color: #444;
+    }
+
+    .theme-toggle:hover {
+      background: #d0d0d0;
+    }
+
+    body.dark-mode .theme-toggle:hover {
+      background: #1f2b4a;
+    }
+
+    /* Tabs - Navigation style */
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      margin-bottom: 24px;
+      border-bottom: 2px solid #ddd;
+    }
+
+    .tabs-label {
+      font-size: 12px;
+      color: #888;
+      margin-right: 12px;
+      align-self: center;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    body.dark-mode .tabs-label {
+      color: #666;
+    }
+
+    body.dark-mode .tabs {
+      border-bottom-color: #333;
+    }
+
+    .tab-btn {
+      padding: 12px 24px;
+      font-size: 14px;
+      font-weight: 600;
+      background: transparent;
+      color: #666;
+      border: none;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover {
+      color: #333;
+      background: rgba(0,0,0,0.03);
+    }
+
+    .tab-btn.active {
+      color: #4a9eff;
+      border-bottom-color: #4a9eff;
+      background: transparent;
+    }
+
+    body.dark-mode .tab-btn {
+      color: #888;
+    }
+
+    body.dark-mode .tab-btn:hover {
+      color: #ccc;
+      background: rgba(255,255,255,0.05);
+    }
+
+    body.dark-mode .tab-btn.active {
+      color: #4a9eff;
+      border-bottom-color: #4a9eff;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .search-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 600px;
+      margin: 0 auto 24px auto;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 8px;
+    }
+
+    input[type="text"], select {
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: #fff;
+      color: #333;
+    }
+
+    body.dark-mode input[type="text"], body.dark-mode select {
+      border-color: #444;
+      background: #16213e;
+      color: #fff;
+    }
+
+    input[type="text"] {
+      flex: 1;
+    }
+
+    input[type="text"]:focus, select:focus {
+      outline: none;
+      border-color: #4a9eff;
+    }
+
+    select {
+      min-width: 120px;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    button[type="submit"] {
+      padding: 10px 20px;
+      font-size: 14px;
+      background: #4a9eff;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    button[type="submit"]:hover {
+      background: #3a8eef;
+    }
+
+    button[type="submit"]:disabled {
+      background: #999;
+      cursor: not-allowed;
+    }
+
+    body.dark-mode button[type="submit"]:disabled {
+      background: #555;
+    }
+
+    .stats {
+      text-align: center;
+      color: #666;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+
+    body.dark-mode .stats {
+      color: #888;
+    }
+
+    .results {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .result-item {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    body.dark-mode .result-item {
+      background: #16213e;
+      border-color: transparent;
+    }
+
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .result-title {
+      font-weight: 600;
+      color: #2070c0;
+      font-size: 14px;
+      text-decoration: none;
+    }
+
+    a.result-title:hover {
+      text-decoration: underline;
+    }
+
+    body.dark-mode .result-title {
+      color: #4a9eff;
+    }
+
+    .result-book {
+      background: #e8f0f8;
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      color: #666;
+    }
+
+    body.dark-mode .result-book {
+      background: #0f3460;
+      color: #aaa;
+    }
+
+    .result-count {
+      color: #666;
+      font-size: 12px;
+    }
+
+    body.dark-mode .result-count {
+      color: #888;
+    }
+
+    .context {
+      font-size: inherit;
+      line-height: 1.6;
+      color: #444;
+      margin: 8px 0;
+      padding: 8px;
+      background: #f0f4f8;
+      border-radius: 4px;
+      border-left: 3px solid #4a9eff;
+    }
+
+    body.dark-mode .context {
+      color: #ccc;
+      background: #0f3460;
+    }
+
+    .context mark {
+      background: #ffeb3b;
+      color: #333;
+      padding: 1px 2px;
+      border-radius: 2px;
+    }
+
+    body.dark-mode .context mark {
+      background: #ffc107;
+      color: #000;
+    }
+
+    .loading {
+      text-align: center;
+      color: #666;
+      padding: 40px;
+    }
+
+    body.dark-mode .loading {
+      color: #888;
+    }
+
+    .error {
+      background: #ffebeb;
+      color: #c44;
+      padding: 16px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    body.dark-mode .error {
+      background: #5c1a1a;
+      color: #ff8888;
+    }
+
+    .no-results {
+      text-align: center;
+      color: #666;
+      padding: 40px;
+    }
+
+    body.dark-mode .no-results {
+      color: #888;
+    }
+
+    .help {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      color: #666;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    body.dark-mode .help {
+      color: #888;
+    }
+
+    .help code {
+      background: #e8f0f8;
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #2070c0;
+    }
+
+    body.dark-mode .help code {
+      background: #16213e;
+      color: #4a9eff;
+    }
+
+    .font-controls {
+      display: flex;
+      gap: 4px;
+    }
+
+    .font-btn {
+      width: 32px;
+      height: 32px;
+      padding: 0;
+      font-size: 18px;
+      font-weight: bold;
+      background: #e0e0e0;
+      color: #333;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    body.dark-mode .font-btn {
+      background: #16213e;
+      color: #eee;
+      border-color: #444;
+    }
+
+    .font-btn:hover {
+      background: #d0d0d0;
+    }
+
+    body.dark-mode .font-btn:hover {
+      background: #1f2b4a;
+    }
+
+    /* Browse form */
+    .browse-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 600px;
+      margin: 0 auto 24px auto;
+    }
+
+    .browse-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .browse-row select {
+      flex: 1;
+      min-width: 150px;
+    }
+
+    /* Chapter item */
+    .chapter-item {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-bottom: 10px;
+    }
+
+    body.dark-mode .chapter-item {
+      background: #16213e;
+      border-color: transparent;
+    }
+
+    .chapter-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .chapter-link {
+      font-weight: 600;
+      color: #2070c0;
+      font-size: 14px;
+      text-decoration: none;
+    }
+
+    .chapter-link:hover {
+      text-decoration: underline;
+    }
+
+    body.dark-mode .chapter-link {
+      color: #4a9eff;
+    }
+
+    .chapter-text {
+      font-size: inherit;
+      line-height: 1.6;
+      color: #444;
+      padding: 8px;
+      background: #f0f4f8;
+      border-radius: 4px;
+      border-left: 3px solid #4a9eff;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    body.dark-mode .chapter-text {
+      color: #ccc;
+      background: #0f3460;
+    }
+
+    .passage-title {
+      text-align: center;
+      font-size: 1.1rem;
+      margin-bottom: 16px;
+      color: #666;
+    }
+
+    body.dark-mode .passage-title {
+      color: #aaa;
+    }
+
+    .chapter-count {
+      text-align: center;
+      color: #666;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+
+    body.dark-mode .chapter-count {
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <div class="header-row">
+    <h1>NIV Bible Search</h1>
+    <button class="theme-toggle" onclick="toggleTheme()">Dark Mode</button>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <span class="tabs-label">Mode:</span>
+    <button class="tab-btn active" onclick="switchTab('search')">Keyword Search</button>
+    <button class="tab-btn" onclick="switchTab('browse')">Browse Chapters</button>
+  </div>
+
+  <!-- Search Tab -->
+  <div id="search-tab" class="tab-content active">
+    <form class="search-form" onsubmit="doSearch(event)">
+      <div class="input-row">
+        <input type="text" id="keyword" placeholder="Search keyword (e.g., love, grace)" autofocus>
+        <select id="book">
+          <option value="">All Books</option>
+          <option value="genesis">Genesis</option>
+          <option value="psalms">Psalms</option>
+          <option value="john">John</option>
+          <option value="romans">Romans</option>
+        </select>
+      </div>
+      <div class="button-row">
+        <button type="submit" id="searchBtn">Search</button>
+        <div class="font-controls">
+          <button type="button" class="font-btn" onclick="changeFontSize(-1)">-</button>
+          <button type="button" class="font-btn" onclick="changeFontSize(1)">+</button>
+        </div>
+      </div>
+    </form>
+
+    <div id="output">
+      <div class="help">
+        <p>Search through the NIV Bible (Genesis, Psalms, John, Romans).</p>
+        <p>Examples:</p>
+        <ul>
+          <li><code>love</code> - search all books</li>
+          <li><code>beginning</code> + Genesis - search only Genesis</li>
+          <li><code>eternal life</code> + John - search Gospel of John</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Browse Chapters Tab -->
+  <div id="browse-tab" class="tab-content">
+    <div class="browse-form">
+      <div class="browse-row">
+        <select id="browse-book" onchange="onBookChange()">
+          <option value="">Select Book</option>
+          <option value="genesis">Genesis (50 chapters)</option>
+          <option value="psalms">Psalms (150 chapters)</option>
+          <option value="john">John (21 chapters)</option>
+          <option value="romans">Romans (15 chapters)</option>
+        </select>
+        <select id="browse-chapter" onchange="loadChapter()">
+          <option value="">Select Chapter</option>
+        </select>
+      </div>
+      <div class="button-row">
+        <div class="font-controls">
+          <button type="button" class="font-btn" onclick="changeFontSize(-1)">-</button>
+          <button type="button" class="font-btn" onclick="changeFontSize(1)">+</button>
+        </div>
+      </div>
+    </div>
+    <div id="browse-output">
+      <div class="help">
+        <p>Browse chapters from the NIV Bible.</p>
+        <p>Select a book and chapter to read.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_URL = '/.netlify/functions/niv-search';
+    const BIBLE_APP_URL = 'https://cdpn.io/pen/debug/KwVxmKR';
+
+    // Chapter counts for each book
+    const BOOK_CHAPTERS = {
+      'genesis': 50,
+      'psalms': 150,
+      'john': 21,
+      'romans': 15
+    };
+
+    // Tab switching
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+      document.querySelector(`[onclick="switchTab('${tabName}')"]`).classList.add('active');
+      document.getElementById(`${tabName}-tab`).classList.add('active');
+    }
+
+    // Generate CodePen Bible URL
+    function getBibleUrl(bookKey, chapter) {
+      return `${BIBLE_APP_URL}?${bookKey}&${chapter}`;
+    }
+
+    // Populate chapter dropdown when book changes
+    function onBookChange() {
+      const bookKey = document.getElementById('browse-book').value;
+      const chapterSelect = document.getElementById('browse-chapter');
+      chapterSelect.innerHTML = '<option value="">Select Chapter</option>';
+
+      if (!bookKey || !BOOK_CHAPTERS[bookKey]) {
+        document.getElementById('browse-output').innerHTML = '';
+        return;
+      }
+
+      const numChapters = BOOK_CHAPTERS[bookKey];
+      for (let i = 1; i <= numChapters; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = `Chapter ${i}`;
+        chapterSelect.appendChild(option);
+      }
+    }
+
+    async function loadChapter() {
+      const bookKey = document.getElementById('browse-book').value;
+      const chapter = document.getElementById('browse-chapter').value;
+      const output = document.getElementById('browse-output');
+
+      if (!bookKey || !chapter) {
+        return;
+      }
+
+      output.innerHTML = '<div class="loading">Loading chapter...</div>';
+
+      try {
+        const response = await fetch(`${API_URL}?action=chapter&b=${bookKey}&c=${chapter}`);
+        const data = await response.json();
+
+        if (data.error) {
+          output.innerHTML = `<div class="error">${data.error}</div>`;
+          return;
+        }
+
+        const bibleUrl = getBibleUrl(data.bookKey, data.chapter);
+
+        let html = `<div class="passage-title">${data.book} ${data.chapter}</div>`;
+        html += '<div class="results">';
+        html += `
+          <div class="chapter-item">
+            <div class="chapter-header">
+              <a href="${bibleUrl}" class="chapter-link" target="_blank">Open in Bible App</a>
+            </div>
+            <div class="chapter-text">${data.text}</div>
+          </div>
+        `;
+        html += '</div>';
+        output.innerHTML = html;
+
+      } catch (err) {
+        output.innerHTML = `<div class="error">Error: ${err.message}</div>`;
+      }
+    }
+
+    function toggleTheme() {
+      const body = document.body;
+      const btn = document.querySelector('.theme-toggle');
+      body.classList.toggle('dark-mode');
+      if (body.classList.contains('dark-mode')) {
+        btn.textContent = 'Light Mode';
+        localStorage.setItem('theme', 'dark');
+      } else {
+        btn.textContent = 'Dark Mode';
+        localStorage.setItem('theme', 'light');
+      }
+    }
+
+    // Font size control
+    let currentFontSize = parseInt(localStorage.getItem('fontSize')) || 14;
+
+    function changeFontSize(delta) {
+      currentFontSize = Math.max(10, Math.min(24, currentFontSize + delta));
+      applyFontSize();
+      localStorage.setItem('fontSize', currentFontSize);
+    }
+
+    function applyFontSize() {
+      document.getElementById('output').style.fontSize = currentFontSize + 'px';
+      document.getElementById('browse-output').style.fontSize = currentFontSize + 'px';
+    }
+
+    // Load saved preferences
+    (function() {
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        document.querySelector('.theme-toggle').textContent = 'Light Mode';
+      }
+      // Apply saved font size
+      applyFontSize();
+    })();
+
+    async function doSearch(e) {
+      e.preventDefault();
+
+      const keyword = document.getElementById('keyword').value.trim();
+      const book = document.getElementById('book').value;
+      const output = document.getElementById('output');
+      const btn = document.getElementById('searchBtn');
+
+      if (!keyword) {
+        output.innerHTML = '<div class="error">Please enter a search keyword</div>';
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Searching...';
+      output.innerHTML = '<div class="loading">Searching NIV Bible...</div>';
+
+      try {
+        const params = new URLSearchParams({ q: keyword });
+        if (book) params.append('b', book);
+
+        const response = await fetch(`${API_URL}?${params}`);
+        const data = await response.json();
+
+        if (data.error) {
+          output.innerHTML = `<div class="error">${data.error}</div>`;
+          return;
+        }
+
+        if (!data.results || data.results.length === 0) {
+          output.innerHTML = `<div class="no-results">No matches found for "${keyword}"</div>`;
+          return;
+        }
+
+        let html = `<div class="stats">Found ${data.totalMatches} matches in ${data.chapterCount} chapters</div>`;
+        html += '<div class="results">';
+
+        for (const result of data.results) {
+          const bibleUrl = getBibleUrl(result.bookKey, result.chapter);
+          const displayTitle = `${result.book} ${result.chapter}`;
+
+          html += `
+            <div class="result-item">
+              <div class="result-header">
+                <a href="${bibleUrl}" class="result-title" target="_blank">${displayTitle}</a>
+                <span class="result-book">${result.book}</span>
+              </div>
+              <div class="result-count">${result.count} matches</div>
+              ${result.contexts.map(ctx =>
+                `<div class="context">${ctx}</div>`
+              ).join('')}
+            </div>
+          `;
+        }
+
+        html += '</div>';
+        output.innerHTML = html;
+
+      } catch (err) {
+        output.innerHTML = `<div class="error">Error: ${err.message}</div>`;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Search';
+      }
+    }
+
+    // Allow pressing Enter in the keyword field
+    document.getElementById('keyword').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        doSearch(e);
+      }
+    });
+  </script>
+</body>
+</html>
