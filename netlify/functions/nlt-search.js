@@ -119,7 +119,7 @@ function getCanonicalBookName(bookKey) {
   return info.name.replace(/ /g, '_');
 }
 
-function getContext(text, keyword, contextChars = 150) {
+function getContext(text, keyword, contextChars = 40) {
   const regex = new RegExp(keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
   const contexts = [];
   const seen = new Set();
