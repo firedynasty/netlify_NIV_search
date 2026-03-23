@@ -100,9 +100,15 @@ function normalizeBookName(bookName) {
     }
   }
 
-  // Partial match
+  // Try with spaces replaced by underscores (e.g. "1 john" -> "1_john")
+  const underscored = lower.replace(/\s+/g, '_');
+  if (AVAILABLE_BOOKS[underscored]) {
+    return underscored;
+  }
+
+  // Partial match (against keys and underscore variant)
   for (const key of Object.keys(AVAILABLE_BOOKS)) {
-    if (key.startsWith(lower) || lower.startsWith(key)) {
+    if (key.startsWith(lower) || key.startsWith(underscored) || lower.startsWith(key)) {
       return key;
     }
   }

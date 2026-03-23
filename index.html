@@ -519,7 +519,7 @@
   <div id="search-tab">
     <form class="search-form" onsubmit="doSearch(event)">
       <div class="input-row">
-        <input type="text" id="keyword" placeholder="Search keyword (e.g., love, grace)" autofocus>
+        <input type="text" id="keyword" placeholder="Search keyword or reference (e.g., love, Gen 31, Ps 23)" autofocus>
         <select id="book">
           <option value="">All Books</option>
           <optgroup label="Old Testament">
@@ -611,6 +611,8 @@
           <li><code>love</code> - search all books</li>
           <li><code>beginning</code> + Genesis - search only Genesis</li>
           <li><code>eternal life</code> + John - search Gospel of John</li>
+          <li><code>Gen 31</code> or <code>Genesis 31</code> - view a chapter</li>
+          <li><code>Ps 23</code>, <code>Matt 5</code>, <code>1 John 3</code> - abbreviations work too</li>
         </ul>
       </div>
     </div>
@@ -709,6 +711,14 @@
       applyFontSize();
     })();
 
+    // Parse input like "Gen 31", "Genesis 31", "Ps 23", "Matt 11:28", "1 John 3"
+    function parseReference(input) {
+      // Match: optional number prefix + book name + chapter (+ optional :verse)
+      const m = input.match(/^(\d?\s*[a-z]+(?:\s+of\s+[a-z]+)?)\s+(\d+)(?::(\d+))?$/i);
+      if (!m) return null;
+      return { book: m[1].trim(), chapter: m[2], verse: m[3] || null };
+    }
+
     async function doSearch(e) {
       e.preventDefault();
 
@@ -719,6 +729,47 @@
 
       if (!keyword) {
         output.innerHTML = '<div class="error">Please enter a search keyword</div>';
+        return;
+      }
+
+      // Check if input looks like a book/chapter reference
+      const ref = parseReference(keyword);
+      if (ref) {
+        btn.disabled = true;
+        btn.textContent = 'Loading...';
+        output.innerHTML = '<div class="loading">Loading chapter...</div>';
+
+        try {
+          const params = new URLSearchParams({ action: 'chapter', b: ref.book, c: ref.chapter });
+          const response = await fetch(`${API_URL}?${params}`);
+          const data = await response.json();
+
+          if (data.error) {
+            output.innerHTML = `<div class="error">${data.error}</div>`;
+            return;
+          }
+
+          const bibleUrl = getBibleUrl(data.bookKey, data.chapter);
+          const firstLine = data.text.split(/\n/)[0].substring(0, 300);
+
+          let html = '<div class="results">';
+          html += `
+            <div class="result-item">
+              <div class="result-header">
+                <a href="${bibleUrl}" class="result-title" target="_blank">${data.book} ${data.chapter}</a>
+              </div>
+              <div class="chapter-text">${data.text}</div>
+            </div>
+          `;
+          html += '</div>';
+          output.innerHTML = html;
+
+        } catch (err) {
+          output.innerHTML = `<div class="error">Error: ${err.message}</div>`;
+        } finally {
+          btn.disabled = false;
+          btn.textContent = 'Search';
+        }
         return;
       }
 
