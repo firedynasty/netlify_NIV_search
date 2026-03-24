@@ -167,53 +167,69 @@ function getContext(text, keyword, contextChars = 40) {
 
 function search(keyword, bookFilter, maxResults = 50) {
   const data = loadData();
-  const results = [];
+
+  // Strip Kindle citation (e.g. "Author. Title (p. 51). Publisher. Kindle Edition.")
+  keyword = keyword.replace(/\s*[\r\n]+\s*[\s\S]*?Kindle Edition\.?\s*$/i, '');
+  // Strip surrounding quotes so "phrase" searches match the text
+  keyword = keyword.replace(/^["'\u201C\u201D\u2018\u2019]+|["'\u201C\u201D\u2018\u2019]+$/g, '');
+  keyword = keyword.trim();
 
   const normalizedBook = normalizeBookName(bookFilter);
-  const regex = new RegExp(keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
-
   const booksToSearch = normalizedBook
     ? [normalizedBook]
     : Object.keys(AVAILABLE_BOOKS);
 
-  for (const bookKey of booksToSearch) {
-    const canonicalName = getCanonicalBookName(bookKey);
-    const bookData = data[canonicalName];
+  // Try full query first, then progressively drop words from the end (min 3 words)
+  const words = keyword.split(/\s+/);
+  const attempts = [];
+  for (let len = words.length; len >= Math.min(3, words.length); len--) {
+    attempts.push(words.slice(0, len).join(' '));
+  }
 
-    if (!bookData || !bookData.chapters) continue;
+  for (const attempt of attempts) {
+    const results = [];
+    const regex = new RegExp(attempt.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
 
-    for (const [chapterNum, chapterText] of Object.entries(bookData.chapters)) {
-      const matches = chapterText.match(regex);
-      if (matches && matches.length > 0) {
-        results.push({
-          book: AVAILABLE_BOOKS[bookKey].name,
-          bookKey: bookKey,
-          chapter: parseInt(chapterNum),
-          count: matches.length,
-          contexts: getContext(chapterText, keyword)
-        });
+    for (const bookKey of booksToSearch) {
+      const canonicalName = getCanonicalBookName(bookKey);
+      const bookData = data[canonicalName];
 
-        if (results.length >= maxResults) {
-          break;
+      if (!bookData || !bookData.chapters) continue;
+
+      for (const [chapterNum, chapterText] of Object.entries(bookData.chapters)) {
+        const matches = chapterText.match(regex);
+        if (matches && matches.length > 0) {
+          results.push({
+            book: AVAILABLE_BOOKS[bookKey].name,
+            bookKey: bookKey,
+            chapter: parseInt(chapterNum),
+            count: matches.length,
+            contexts: getContext(chapterText, attempt)
+          });
+
+          if (results.length >= maxResults) break;
         }
       }
+
+      if (results.length >= maxResults) break;
     }
 
-    if (results.length >= maxResults) {
-      break;
+    if (results.length > 0) {
+      // Update keyword to the successful attempt for the response
+      keyword = attempt;
+      // Sort and return these results
+      const bookOrder = Object.keys(AVAILABLE_BOOKS);
+      results.sort((a, b) => {
+        const orderA = bookOrder.indexOf(a.bookKey);
+        const orderB = bookOrder.indexOf(b.bookKey);
+        if (orderA !== orderB) return orderA - orderB;
+        return a.chapter - b.chapter;
+      });
+      return { keyword, results };
     }
   }
 
-  // Sort by book order, then chapter
-  const bookOrder = Object.keys(AVAILABLE_BOOKS);
-  results.sort((a, b) => {
-    const orderA = bookOrder.indexOf(a.bookKey);
-    const orderB = bookOrder.indexOf(b.bookKey);
-    if (orderA !== orderB) return orderA - orderB;
-    return a.chapter - b.chapter;
-  });
-
-  return results;
+  return { keyword, results: [] };
 }
 
 function getChapter(bookFilter, chapter) {
@@ -333,18 +349,18 @@ exports.handler = async (event, context) => {
       };
     }
 
-    const results = search(keyword, book, maxResults);
-    const totalMatches = results.reduce((sum, r) => sum + r.count, 0);
+    const searchResult = search(keyword, book, maxResults);
+    const totalMatches = searchResult.results.reduce((sum, r) => sum + r.count, 0);
 
     return {
       statusCode: 200,
       headers,
       body: JSON.stringify({
-        keyword,
+        keyword: searchResult.keyword,
         book: book || 'all',
         totalMatches,
-        chapterCount: results.length,
-        results
+        chapterCount: searchResult.results.length,
+        results: searchResult.results
       })
     };
   } catch (error) {
