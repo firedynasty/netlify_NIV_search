@@ -511,13 +511,17 @@
 </head>
 <body>
   <div class="header-row">
-    <h1>NLT Bible Search</h1>
+    <h1 id="page-title">NLT Bible Search</h1>
     <button class="theme-toggle" onclick="toggleTheme()">Dark Mode</button>
   </div>
 
   <!-- Search -->
   <div id="search-tab">
     <form class="search-form" onsubmit="doSearch(event)">
+      <div class="input-row" style="justify-content: center; gap: 16px;">
+        <label style="cursor:pointer"><input type="radio" name="version" value="nlt" checked onchange="switchVersion(this.value)"> NLT</label>
+        <label style="cursor:pointer"><input type="radio" name="version" value="esv" onchange="switchVersion(this.value)"> ESV</label>
+      </div>
       <div class="input-row">
         <input type="text" id="keyword" placeholder="Search keyword or reference (e.g., love, Gen 31, Ps 23)" autofocus>
         <select id="book">
@@ -620,8 +624,36 @@
 
 
   <script>
-    const API_URL = '/.netlify/functions/nlt-search';
+    let currentVersion = 'nlt';
+    const API_URLS = {
+      nlt: '/.netlify/functions/nlt-search',
+      esv: '/.netlify/functions/esv-search'
+    };
     const BIBLE_GATEWAY_URL = 'https://www.biblegateway.com/passage/';
+
+    // ESV books (only what's been scraped)
+    const ESV_BOOKS_HTML = `
+      <option value="">All Books</option>
+      <option value="ephesians">Ephesians</option>
+      <option value="philippians">Philippians</option>
+      <option value="psalms">Psalms</option>
+    `;
+
+    // Store the NLT options from the initial HTML
+    const NLT_BOOKS_HTML = document.getElementById('book').innerHTML;
+
+    function switchVersion(version) {
+      currentVersion = version;
+      const bookSelect = document.getElementById('book');
+      const title = document.getElementById('page-title');
+      if (version === 'esv') {
+        bookSelect.innerHTML = ESV_BOOKS_HTML;
+        title.textContent = 'ESV Bible Search';
+      } else {
+        bookSelect.innerHTML = NLT_BOOKS_HTML;
+        title.textContent = 'NLT Bible Search';
+      }
+    }
 
     // Chapter counts for each book
     const BOOK_CHAPTERS = {
@@ -672,7 +704,8 @@
     // Generate BibleGateway URL
     function getBibleUrl(bookKey, chapter) {
       const searchName = BOOK_SEARCH_NAMES[bookKey] || bookKey;
-      return `${BIBLE_GATEWAY_URL}?search=${searchName}%20${chapter}&version=NLT`;
+      const ver = currentVersion.toUpperCase();
+      return `${BIBLE_GATEWAY_URL}?search=${searchName}%20${chapter}&version=${ver}`;
     }
 
     function toggleTheme() {
@@ -741,7 +774,7 @@
 
         try {
           const params = new URLSearchParams({ action: 'chapter', b: ref.book, c: ref.chapter });
-          const response = await fetch(`${API_URL}?${params}`);
+          const response = await fetch(`${API_URLS[currentVersion]}?${params}`);
           const data = await response.json();
 
           if (data.error) {
@@ -775,13 +808,13 @@
 
       btn.disabled = true;
       btn.textContent = 'Searching...';
-      output.innerHTML = '<div class="loading">Searching NLT Bible...</div>';
+      output.innerHTML = `<div class="loading">Searching ${currentVersion.toUpperCase()} Bible...</div>`;
 
       try {
         const params = new URLSearchParams({ q: keyword });
         if (book) params.append('b', book);
 
-        const response = await fetch(`${API_URL}?${params}`);
+        const response = await fetch(`${API_URLS[currentVersion]}?${params}`);
         const data = await response.json();
 
         if (data.error) {
