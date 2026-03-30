@@ -102,7 +102,10 @@ function search(keyword, bookFilter, maxResults = 50) {
 
   for (const attempt of attempts) {
     const results = [];
-    const regex = new RegExp(attempt.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+    // Allow optional punctuation between words so "children obey" matches "children, obey"
+    const escaped = attempt.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const pattern = escaped.replace(/\s+/g, '[,;:.\\-\\u2014]*\\s+');
+    const regex = new RegExp(pattern, 'gi');
 
     for (const bookKey of booksToSearch) {
       const canonicalName = getCanonicalBookName(bookKey);
