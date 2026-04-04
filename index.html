@@ -604,6 +604,7 @@
       </div>
       <div class="button-row">
         <button type="submit" id="searchBtn">Search</button>
+        <button type="button" id="hymn-prompt-btn" style="display:none;background:#6c5ce7;border:none;color:#fff;padding:6px 14px;border-radius:4px;cursor:pointer;font-size:14px" onclick="copyHymnPrompt(this)">Copy Hymn Prompt</button>
         <div class="font-controls">
           <button type="button" class="font-btn" onclick="changeFontSize(-1)">-</button>
           <button type="button" class="font-btn" onclick="changeFontSize(1)">+</button>
@@ -655,6 +656,7 @@
 
       if (version === 'hymns') {
         bookSelect.style.display = 'none';
+        document.getElementById('hymn-prompt-btn').style.display = '';
         title.textContent = 'Hymn Search';
         if (helpDiv) helpDiv.innerHTML = `
           <p>Search through 608 hymns from the 1955 Hymnal.</p>
@@ -667,11 +669,13 @@
           </ul>`;
       } else if (version === 'esv') {
         bookSelect.style.display = '';
+        document.getElementById('hymn-prompt-btn').style.display = 'none';
         bookSelect.innerHTML = ESV_BOOKS_HTML;
         title.textContent = 'ESV Bible Search';
         if (helpDiv) helpDiv.innerHTML = `<p>Search through the ESV Bible.</p>`;
       } else {
         bookSelect.style.display = '';
+        document.getElementById('hymn-prompt-btn').style.display = 'none';
         bookSelect.innerHTML = NLT_BOOKS_HTML;
         title.textContent = 'NLT Bible Search';
         if (helpDiv) helpDiv.innerHTML = `
@@ -991,6 +995,19 @@
     function hymnLookup(num) {
       document.getElementById('keyword').value = num;
       doSearch({ preventDefault: () => {} });
+    }
+
+    async function copyHymnPrompt(btn) {
+      try {
+        const resp = await fetch('/data/hymn_reference_for_claude.txt');
+        const text = await resp.text();
+        await navigator.clipboard.writeText(text);
+        btn.textContent = 'Prompt copied to clipboard!';
+        setTimeout(() => { btn.textContent = 'Copy Hymn Prompt'; }, 2000);
+      } catch (err) {
+        btn.textContent = 'Copy failed';
+        setTimeout(() => { btn.textContent = 'Copy Hymn Prompt'; }, 2000);
+      }
     }
 
     // Allow pressing Enter in the keyword field

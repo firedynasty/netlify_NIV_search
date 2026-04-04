@@ -1,0 +1,623 @@
+# Hymn Similarity Finder (H1955 Hymnal)
+
+You are a hymn similarity assistant. When given lyrics or a title of a modern praise/worship song, find the most similar hymns from the H1955 hymnal database below.
+
+## How to respond
+1. Identify the key themes, theology, and imagery in the provided song
+2. Match those against the topics and first lines of the hymns below
+3. Return the top 5-10 most similar hymns with:
+   - Hymn number and first line
+   - Shared themes/topics
+   - Brief explanation of why it's similar
+
+## Hymn Database
+Format: Hymn#|First Line|Topics (semicolon-separated)
+
+#1|Praise ye the Lord, the Almighty, the King of creation!|Adoration and Praise; God/Strength and Refuge; Worship/Adoration and Praise
+#10|Mighty God, while angels bless Thee|Adoration and Praise; God/Creator; God/Grace; God/Providence; Worship/Adoration and Praise
+#100|All creatures of our God and King|God/Nature, in; God/Providence; God the Father/in Nature; Nature
+#101|This is my Father's world|Confidence; God/Nature, in; God the Father/in Nature; Victory
+#102|God, who touchest earth with beauty|Aspiration; God/Nature, in; God the Father/in Nature; Nature; Purity of Life
+#103|God is Love; His mercy brightens|God/Light; God/Love and Fatherhood; God/Wisdom; God the Father/His Love and Fatherhood
+#104, #104B, #104A|The Lord's my Shepherd, I'll not want|Contentment; God the Father/His Love and Fatherhood; Peace, Spiritual; Trust
+#104A, #104, #104B|The Lord's my Shepherd, I'll not want|God/Providence
+#104B, #104A|The Lord's my Shepherd, I'll not want|God/Guide
+#104B, #104A, #104|The Lord's my Shepherd, I'll not want|God/Love and Fatherhood; God/Shepherd
+#105|How gentle God's commands|Contentment; God/Guide; God/Love and Fatherhood; God the Father/His Love and Fatherhood; Peace, Spiritual
+#106, #106A|The King of love my Shepherd is|Forgiveness; God/Guide; God/Providence; Peace, Spiritual; Penitence; Trust
+#106A, #106|The King of love my Shepherd is|God/Love and Fatherhood; God/Mercy; God/Shepherd; God the Father/His Love and Fatherhood
+#107|Father, long before creation|God/Love and Fatherhood; God the Father/His Love and Fatherhood
+#108|God of our life, through all the circling years|God/Guide; God/Love and Fatherhood; God the Father/His Love and Fatherhood; Heritage; New Year, The; Patriotism; Pilgrimage of life
+#109|I bow my forehead to the dust|Faith; God/Love and Fatherhood; God the Father/His Love and Fatherhood; Humility; Penitence; Trust
+#11|Holy, Holy, Holy! Lord God Almighty!|Adoration and Praise; God/Eternity and Power; Processionals; Trinity, The Holy; Worship/Adoration and Praise
+#110, #110A|There's a wideness in God's mercy|God/Justice
+#110A, #110|There's a wideness in God's mercy|God/Love and Fatherhood; God/Mercy; God the Father/His Love and Fatherhood
+#111|O God, our Help in ages past|God/Eternity and Power; God/Presence; God the Father/His Presence; Trust
+#112, #112A|God moves in a mysterious way|God/Presence; God/Providence; God the Father/His Presence
+#112A, #112|God moves in a mysterious way|God/Eternity and Power
+#113|My soul with expectation doth|God/Presence; God/Strength and Refuge; God the Father/His Presence; Trust
+#114|I look to Thee in every need|God/Guide; God/Presence; God/Strength and Refuge; God the Father/His Presence; Trust
+#115|Praise the Lord, for He is good|Adoration and Praise; God/Eternity and Power; God/Justice; God/Love and Fatherhood; God/Presence; God the Father/His Presence
+#116|O Love divine, that stooped to share|Contentment; God/Presence; God the Father/His Presence; Trust
+#117|By all whom Thou hast made|Commitment; God/Love and Fatherhood; God/Presence; God the Father/His Presence
+#118|O Love of God most full|God/Presence; God/Providence; God/Shepherd; God the Father/His Presence
+#119|When all Thy mercies, O my God|God/Presence; God/Providence; God the Father/His Presence; Gratitude
+#12|Lord of health, Thou life within us|Adoration and Praise; Common Duties and Things; God/Grace; Schools; Worship/Adoration and Praise
+#120|Behold th' amazing gift of love|God/Love and Fatherhood; God/Presence; God the Father/His Presence; Hope; Life Everlasting, The; Redemption
+#121|O thou, my soul, bless God the Lord|God/Love and Fatherhood; God/Presence; God/Providence; God the Father/His Presence; Gratitude; Healing
+#122|God of compassion, in mercy befriend us|God/Presence; God/Protection; God the Father/His Presence; Walking with God
+#123|Call Jehovah thy Salvation|Contentment; God/Presence; God/Protection; God/Strength and Refuge; God the Father/His Presence
+#124|Be not dismayed whate'er betide|God/Presence; God/Protection; God the Father/His Presence
+#125|Come, let us to the Lord our God|Christ/Second Coming; God/Presence; God the Father/His Presence; Redemption
+#126|In sweet communion, Lord, with thee|Aspiration; God/Guide; God/Presence; God the Father/His Presence
+#127|O Lord, by Thee delivered|Aspiration; God/Presence; God the Father/His Presence; Gratitude; Life Everlasting, The; Redemption
+#128|Our God, to whom we turn|Aspiration; Discipleship; God/Eternity and Power; God/Presence; God the Father/His Presence; Schools
+#129|O Lord, my inmost heart and thought|God/Guide; God/Presence; God the Father/His Presence
+#13|God Himself is with us|Adoration and Praise; Aspiration; Opening of Worship; Processionals; Worship/Adoration and Praise
+#130|How sweet the name of Jesus sounds|Christ/Adoration and Praise; Christ/Friend; Christ/Master; Christ/Shepherd; Jesus Christ/Adoration and Praise; Name of Jesus, The
+#131|Come Christians, join to sing|Christ/Adoration and Praise; Christ/Friend; Christ/Guide; Jesus Christ/Adoration and Praise
+#132, #132A|All hail the power of Jesus' name!|Christ/Adoration and Praise; Christ/Conqueror
+#132A, #132|All hail the power of Jesus' name!|Christ/Exaltation; Jesus Christ/Adoration and Praise
+#133|Look, ye saints, the sight is glorious|Christ/Adoration and Praise; Christ/Conqueror; Christ/Exaltation; Christ/Resurrection; Christ/Triumphal Entry; Jesus Christ/Adoration and Praise; Processionals
+#134|O could I speak the matchless worth|Christ/Adoration and Praise; Christ/Beauty; Jesus Christ/Adoration and Praise; Life Everlasting, The
+#135, #135A|Fairest Lord Jesus|Christ/Adoration and Praise
+#135A, #135|Fairest Lord Jesus|Christ/Beauty; Jesus Christ/Adoration and Praise
+#136|Christ is the world's redeemer|Christ/Adoration and Praise; Christ/Life, Our; Christ/Ministry; Christ/Resurrection; Christ/Way, The; Jesus Christ/Adoration and Praise; Trinity, The Holy
+#137|Blessing and honor and glory and power|Christ/Adoration and Praise; Jesus Christ/Adoration and Praise; Name of Jesus, The; Redemption
+#138|Light of the world, we hail Thee|Christ/Adoration and Praise; Christ/Light; Jesus Christ/Adoration and Praise; Missions; Peace on Earth
+#139|Blessed assurance, Jesus is mine!|Assurance; Christ/Adoration and Praise; Commitment; Jesus Christ/Adoration and Praise
+#14|Lord of the worlds above|Adoration and Praise; Aspiration; Church, The; Discipleship; God/Grace; God/Providence; Worship/Adoration and Praise
+#140|Rejoice, the Lord is King|Christ/Adoration and Praise; Christ/Conqueror; Christ/King; Jesus Christ/Adoration and Praise; Joy
+#141|O for a thousand tongues to sing|Christ/Adoration and Praise; Jesus Christ/Adoration and Praise; Missions; Name of Jesus, The; Redemption
+#142|Majestic sweetness sits enthroned|Christ/Adoration and Praise; Christ/Beauty; Christ/Grace; Jesus Christ/Adoration and Praise
+#143|At the name of Jesus|Christ/Adoration and Praise; Christ/Conqueror; Christ/King; Christ/Ministry; Christ/Passion; Christ/Second Coming; Jesus Christ/Adoration and Praise
+#144|I greet Thee, who my sure Redeemer art|Christ/Adoration and Praise; Christ/Grace; Christ/King; Christ/Life, Our; Jesus Christ/Adoration and Praise; Unity
+#145|O Light, whose beams illumine all|Christ/Adoration and Praise; Christ/Life, Our; Christ/Light; Christ/Strength and Refuge; Christ/Way, The; Jesus Christ/Adoration and Praise; Truth
+#146|Hail to the Lord's Anointed|Christ/Adoration and Praise; Christ/Advent; Christ/Conqueror; Christ/Judge; Christ/King; Christ/Ministry; Christ/Triumphal Entry; Jesus Christ/His Advent; Missions; Name of Jesus, The
+#147|O come, O come, Emmanuel|Christ/Advent; Christ/Light; Jesus Christ/His Advent; Peace on Earth; Unity
+#148|Let all mortal flesh keep silence|Angels; Christ/Advent; Christ/Birth and Infancy; Christ/Light; Communion, Holy; Jesus Christ/His Advent
+#149|Watchman, tell us of the night|Christ/Advent; Christ/Light; Jesus Christ/His Advent
+#15|Sing praise to God who reigns above|Adoration and Praise; Worship/Adoration and Praise
+#150|Hark, what a sound, and too divine for hearing|Christ/Advent; Christ/Presence; Jesus Christ/His Advent
+#151A, #151|Come, Thou long-expected Jesus|Christ/Advent; Christ/Saviour; Jesus Christ/His Advent
+#152|Lift up your heads, ye mighty gates|Christ/Advent; Christ/Birth and Infancy; Christ/Presence; Christ/Saviour; Jesus Christ/His Advent; Submission
+#153|The race that long in darkness pined|Christ/Adoration and Praise; Christ/Advent; Christ/King; Jesus Christ/His Advent
+#154|Silent night! holy night!|Christ/Birth and Infancy; Jesus Christ/His Birth; Star in the East
+#155|There's a song in the air!|Christ/Birth and Infancy; Christ/King; Jesus Christ/His Birth; Star in the East
+#156|The first Noel the angel did say|Christ/Birth and Infancy; Christ/Epiphany; Jesus Christ/His Birth; Star in the East
+#156A|Noel, noel|Christ/Birth and Infancy; Christ/Epiphany; Jesus Christ/His Birth; Star in the East
+#157|Away in a manger, no crib for His bed|Christ/Birth and Infancy; Jesus Christ/His Birth; Young, Hymns for the
+#158|Angels we have heard on high|Christ/Birth and Infancy; Jesus Christ/His Birth
+#159|What Child is this, who, laid to rest|Christ/Birth and Infancy; Christ/King; Jesus Christ/His Birth
+#16|We come unto our fathers' God|Adoration and Praise; Communion of Saints; Heritage; Opening of Worship; Patriotism; Processionals; Saints; Worship/Adoration and Praise
+#160|It came upon the midnight clear|Christ/Birth and Infancy; Christ/Strength and Refuge; Jesus Christ/His Birth; Peace on Earth
+#161|Joy to the world! the Lord is come|Christ/Birth and Infancy; Christ/Saviour; Jesus Christ/His Birth; Joy
+#162|Lo, how a rose e'er blooming|Christ/Birth and Infancy; Jesus Christ/His Birth
+#163|Hark, the herald angels sing|Christ/Birth and Infancy; Christ/Incarnation; Jesus Christ/His Birth
+#164|Infant holy, Infant lowly,|Christ/Birth and Infancy; Jesus Christ/His Birth
+#165|Good Christian men, rejoice|Christ/Birth and Infancy; Christ/Saviour; Jesus Christ/His Birth; Joy; Young, Hymns for the; Youth, Hymns for
+#166|God rest you merry, gentlemen|Christ/Birth and Infancy; Christ/Saviour; Fellowship; Jesus Christ/His Birth
+#167|Gentle Mary laid her Child|Christ/Birth and Infancy; Christ/Saviour; Jesus Christ/His Birth
+#168|Angels, from the realms of glory|Christ/Birth and Infancy; Christ/King; Jesus Christ/His Birth; Star in the East
+#169|While shepherds watched their flocks by night|Christ/Birth and Infancy; Jesus Christ/His Birth; Peace on Earth
+#17|We praise Thee, O God, our Redeemer, Creator|Adoration and Praise; God/Protection; God/Strength and Refuge; Patriotism; Worship/Adoration and Praise
+#170|O come, all ye faithful|Christ/Birth and Infancy; Christ/Incarnation; Jesus Christ/His Birth
+#171|O little town of Bethlehem|Christ/Birth and Infancy; Christ/Presence; Christ/Saviour; God/Grace; Jesus Christ/His Birth
+#172|All my heart this night rejoices|Christ/Birth and Infancy; Jesus Christ/His Birth
+#173|Ah, dearest Jesus, holy Child|Christ/Birth and Infancy; Jesus Christ/His Birth; New Year, The
+#174|As with gladness men of old|Christ/Epiphany; Commitment; Jesus Christ/His Epiphany
+#175|Brightest and best of the sons of the morning|Christ/Epiphany; Jesus Christ/His Epiphany; Sacrifice; Star in the East
+#176|We three kings of Orient are|Christ/Epiphany; Christ/Resurrection; Jesus Christ/His Epiphany; Star in the East
+#177|O sing a song of Bethlehem|Christ/Birth and Infancy; Christ/Boyhood; Christ/Conqueror; Christ/Life; Christ/Ministry; Christ/Saviour; Jesus Christ/His Life and Ministry
+#178|O Master Workman of the race|Christ/Boyhood; Christ/Call; Christ/Life; Christ/Ministry; Christ/Teacher; Jesus Christ/His Life and Ministry; Labor Day; Purpose; Stewardship
+#179|Thine arm, O Lord, in days of old|Christ/Life; Christ/Ministry; Healing; Jesus Christ/His Life and Ministry; Labor Day
+#18|We gather together to ask the Lord's blessing|Adoration and Praise; Worship/Adoration and Praise
+#180|What grace, O Lord, and beauty shone|Christ/Beauty; Christ/Life; Christ/Love of; Christ/Ministry; Christ/Presence; Christ/Sympathy; Jesus Christ/His Life and Ministry
+#181|Lord, who throughout these forty days|Christ/Life; Christ/Ministry; Christ/Resurrection; Jesus Christ/His Life and Ministry; Lent; Temptation
+#182|O wondrous type, O vision fair|Christ/Example; Christ/Life; Christ/Ministry; Christ/Transfiguration; Jesus Christ/His Life and Ministry; Vision
+#183|We would see Jesus; lo! His star is shining|Christ/Call; Christ/Call, Answering His; Christ/Epiphany; Christ/Example; Christ/Life; Christ/Ministry; Christ/Teacher; Commitment; Common Duties and Things; Jesus Christ/His Life and Ministry; Looking to Jesus
+#184|Thou didst leave Thy throne and Thy kingly crown|Aspiration; Christ/Life; Christ/Ministry; Devotion; Jesus Christ/His Life and Ministry; Looking to Jesus
+#185|Hosanna, loud hosanna|Christ/King; Christ/Triumphal Entry; Jesus Christ/His Triumphal Entry
+#186|When, His salvation bringing|Christ/King; Christ/Triumphal Entry; Commitment; Jesus Christ/His Triumphal Entry
+#187|All glory, laud, and honor|Christ/Adoration and Praise; Christ/Exaltation; Christ/King; Christ/Triumphal Entry; Jesus Christ/His Triumphal Entry; Processionals
+#188|Ride on! ride on in majesty!|Christ/Conqueror; Christ/King; Christ/Triumphal Entry; Jesus Christ/His Triumphal Entry
+#189|'Tis midnight; and on Olive's brow|Christ/Atonement; Christ/Gethsemane; Christ/Passion; Jesus Christ/His Passion and Atonement
+#19|Praise God, ye servants of the Lord|Adoration and Praise; Worship/Adoration and Praise
+#190|Beneath the cross of Jesus|Christ/Atonement; Christ/Passion; Christ/Strength and Refuge; Commitment; Communion, Holy; Cross, The; Devotion; Jesus Christ/His Passion and Atonement
+#191|Ah, holy Jesus, how hast Thou offended|Adoration and Praise; Christ/Atonement; Christ/Passion; Cross, The; Humility; Jesus Christ/His Passion and Atonement; Penitence
+#192|O come and mourn with me awhile|Christ/Atonement; Christ/Passion; God/Love and Fatherhood; Jesus Christ/His Passion and Atonement; Penitence
+#193|Go to dark Gethsemane|Christ/Atonement; Christ/Example; Christ/Gethsemane; Christ/Passion; Christ/Teacher; Devotion; Discipleship; Jesus Christ/His Passion and Atonement
+#194|O sacred Head, now wounded|Christ/Atonement; Christ/Passion; Commitment; Devotion; Jesus Christ/His Passion and Atonement
+#195|In the cross of Christ I glory|Christ/Atonement; Christ/King; Christ/Passion; Christ/Strength and Refuge; Cross, The; Jesus Christ/His Passion and Atonement
+#196|Cross of Jesus, cross of sorrow|Christ/Atonement; Christ/King; Christ/Passion; Christ/Sympathy; Jesus Christ/His Passion and Atonement
+#197|Throned upon the awful tree|Christ/Atonement; Christ/Passion; Christ/Strength and Refuge; Communion, Holy; Cross, The; Jesus Christ/His Passion and Atonement
+#198|When I survey the wondrous cross|Christ/Atonement; Christ/Love of; Christ/Passion; Commitment; Communion, Holy; Cross, The; Jesus Christ/His Passion and Atonement
+#199|Alas! and did my Saviour bleed|Christ/Atonement; Christ/Passion; Confession; Jesus Christ/His Passion and Atonement; Lent; Penitence; Sin
+#2|For the beauty of the earth|Adoration and Praise; God/Nature, in; Gratitude; Nature; Thanksgiving; Unity; Worship/Adoration and Praise
+#20|It is good to sing Thy praises|Adoration and Praise; God/Strength and Refuge; Victory; Worship/Adoration and Praise
+#200|O Jesus, we adore Thee|Christ/Atonement; Christ/Life, Our; Christ/Passion; Confession; Jesus Christ/His Passion and Atonement; Life Everlasting, The; Name of Jesus, The; Penitence
+#201|Were you there when they crucified my Lord?|Christ/Atonement; Christ/Passion; Jesus Christ/His Passion and Atonement; Spirituals
+#202|There is a green hill far away|Christ/Atonement; Christ/Love of; Christ/Passion; Jesus Christ/His Passion and Atonement; Redemption
+#203|The strife is o'er, the battle done|Christ/Conqueror; Christ/Redemption; Christ/Resurrection; Funeral Services; Jesus Christ/His Resurrection; Redemption; Victory
+#204|Jesus Christ is risen today|Adoration and Praise; Christ/Redemption; Christ/Resurrection; Jesus Christ/His Resurrection; Redemption
+#205|Come, ye faithful, raise the strain|Christ/Conqueror; Christ/Redemption; Christ/Resurrection; Jesus Christ/His Resurrection
+#206|O sons and daughters, let us sing!|Adoration and Praise; Christ/King; Christ/Resurrection; Faith; Jesus Christ/His Resurrection; Victory
+#207|"Welcome, happy morning!" age to age shall say|Christ/Conqueror; Christ/Resurrection; Jesus Christ/His Resurrection; Nature
+#208|The day of resurrection!|Christ/Resurrection; Jesus Christ/His Resurrection; Joy; Victory
+#209|Thine is the glory|Christ/Conqueror; Christ/Resurrection; Church, The/Church Triumphant; Commitment; Jesus Christ/His Resurrection; Victory
+#21|Joyful, joyful, we adore Thee|Adoration and Praise; Fellowship; God/Nature, in; Joy; Love and Communion; Nature; Worship/Adoration and Praise
+#210|Hail, Thou once despised Jesus|Christ/Adoration and Praise; Christ/Ascension; Christ/Atonement; Christ/Intercession; Christ/Passion; Christ/Redemption; Jesus Christ/His Ascension
+#211, #211A|The Head that once was crowned with thorns|Christ/King
+#211A, #211|The Head that once was crowned with thorns|All Saints' Day; Christ/Ascension; Christ/Grace; Jesus Christ/His Ascension; Saints
+#212|The Lord ascendeth up on high|Aspiration; Christ/Ascension; Christ/Conqueror; Christ/King; Jesus Christ/His Ascension
+#213|Crown Him with many crowns|Christ/Adoration and Praise; Christ/Ascension; Christ/Exaltation; Christ/King; Jesus Christ/His Ascension; Peace on Earth
+#214|O Holy Saviour, Friend unseen|Christ/Presence; Christ/Strength and Refuge; Devotion; Jesus Christ/His Presence; Submission
+#215|Jesus, Thou Joy of loving hearts|Christ/Presence; Christ/Strength and Refuge; Communion, Holy; Jesus Christ/His Presence
+#216|Jesus, Lover of my soul|Christ/Grace; Christ/Presence; Christ/Strength and Refuge; Confession; Contrition; Jesus Christ/His Presence
+#216A|Jesus, Lover  of my soul|Christ/Grace; Christ/Presence; Christ/Strength and Refuge; Confession; Contrition; Jesus Christ/His Presence
+#217|O Son of Man, our Hero strong and tender|Christ/Leader; Christ/Presence; Christ/Son of Man; Commitment; Jesus Christ/His Presence
+#218|Since Jesus is my Friend|Christ/Friend; Christ/Light; Christ/Presence; Jesus Christ/His Presence; Joy
+#219|O Thou, in all Thy might so far|Christ/Light; Christ/Presence; Faith; Jesus Christ/His Presence
+#22|Let all the world in every corner sing|Adoration and Praise; God/King; Worship/Adoration and Praise
+#220|I've found a Friend, O such a Friend!|Christ/Friend; Christ/Presence; Commitment; Jesus Christ/His Presence
+#221|Thou art the Way: to Thee alone|Christ/Life; Christ/Presence; Christ/Way, The; Christ/Word, The; Jesus Christ/His Presence
+#222|Jesus, stand among us|Christ/Comforter; Christ/Presence; Jesus Christ/His Presence
+#223|Jesus merciful|Christ/Friend; Christ/Mercy; Christ/Presence; Communion, Holy; Jesus Christ/His Presence
+#224|I know not how that Bethlehem's Babe|Christ/Love of; Christ/Presence; Jesus Christ/His Presence; Life Everlasting, The; Redemption
+#225|Jesus, kneel beside me|Christ/Presence; Christ/Teacher; Evening; Jesus Christ/His Presence; Prayer
+#226|Blest are the pure in heart|Christ/Example; Christ/Presence; Jesus Christ/His Presence; Purity of Life
+#227|We bear the strain of earthly care|Brotherhood; Christ/Presence; Common Duties and Things; Jesus Christ/His Presence; Labor Day
+#228|Strong Son of God, immortal Love|Christ/Leader; Christ/Presence; Faith; Jesus Christ/His Presence
+#229|Immortal Love, forever full|Christ/Healing; Christ/Love of; Christ/Presence; Jesus Christ/His Presence; Unity
+#23|All nature's works His praise declare|Adoration and Praise; Dedication Services/Of a Church; God/Nature, in; Nature; Worship/Adoration and Praise
+#230|The Lord will come and not be slow|Christ/Divine; Christ/Judge; Christ/Second Coming; Christ/Son of God; Jesus Christ/His Coming in Glory
+#231|Rejoice, rejoice, believers|Christ/Second Coming; Jesus Christ/His Coming in Glory; Redemption; Watchfulness
+#232|The King shall come when morning dawns|Christ/Second Coming; Jesus Christ/His Coming in Glory
+#233|Come, Lord, and tarry not|Christ/King; Christ/Second Coming; Jesus Christ/His Coming in Glory
+#234|Lo! He comes, with clouds descending|Christ/King; Christ/Second Coming; Church, The/Church Triumphant; Jesus Christ/His Coming in Glory; Victory
+#235|Breathe on me, Breath of God|Commitment; Life Everlasting, The; Spirit, The Holy
+#236|Spirit of God, descend upon my heart|Commitment; Communion, Holy; Love and Communion; Spirit, The Holy
+#237|Come, Holy Ghost, our souls inspire|Peace on Earth; Peace, Spiritual; Spirit, The Holy
+#238|Seal us, O Holy Spirit|Commitment; Spirit, The Holy
+#239|Come, Holy Spirit, heavenly Dove|Aspiration; Spirit, The Holy
+#24, #24A|All people that on earth do dwell|Adoration and Praise; Worship/Adoration and Praise
+#240|Holy Spirit, Truth divine|Aspiration; Spirit, The Holy
+#241|Gracious Spirit, dwell with me|Aspiration; Spirit, The Holy
+#242|O Spirit of the living God|Missions; Name of Jesus, The; Spirit, The Holy
+#243|Spirit divine, attend our prayers|Church, The/Church Expectant; Spirit, The Holy
+#244|Come, Thou Almighty King|Adoration and Praise; Trinity, The Holy
+#245, #245A|O Trinity of blessed light|Adoration and Praise
+#245A, #245|O Trinity of blessed light|Trinity, The Holy
+#246|Ancient of Days, who sittest throned in glory|Adoration and Praise; God/Providence; Peace on Earth; Processionals; Trinity, The Holy
+#247|O God of Light, Thy Word, a lamp unfailing|Bible, The; Scriptures, The Holy
+#248|Book of books, our people's strength|Art and Literature; Bible, The; Scriptures, The Holy
+#249|Father of mercies, in Thy word|Bible, The; Christ/Teacher; Scriptures, The Holy
+#24A, #24|All people that on earth do dwell|God/Shepherd; Joy; Opening of Worship
+#25|We worship Thee, almighty Lord|Adoration and Praise; Church, The/Church Triumphant; Name of Jesus, The; Worship/Adoration and Praise
+#250|Break Thou the bread of life|Bible, The; Communion, Holy; Scriptures, The Holy
+#251, #251A|O Word of God Incarnate|Bible, The
+#251A, #251|O Word of God Incarnate|Christ/Word, The; Missions; Scriptures, The Holy
+#252|Lord, Thy Word abideth|Bible, The; Scriptures, The Holy
+#253|How I love Thy law, O Lord!|Bible, The; Scriptures, The Holy
+#254|Lamp of our feet, whereby we trace|Bible, The; God/Strength and Refuge; Scriptures, The Holy
+#255|O come, my people, to my law|Bible, The; Scriptures, The Holy
+#256|O Lord of life, to Thee we lift|Bible, The; God/Light; Heritage; Scriptures, The Holy
+#257|Most perfect is the law of God|Bible, The; Scriptures, The Holy
+#258|How shall the young direct their way?|Bible, The; Scriptures, The Holy
+#259|The heavens declare Thy glory, Lord|Bible, The; God/Nature, in; Missions; Scriptures, The Holy
+#26|O worship the King all glorious above|Adoration and Praise; God/Eternity and Power; God/Nature, in; Nature; Trust; Worship/Adoration and Praise
+#260|The Spirit breathes upon the Word|Bible, The; God/Light; Scriptures, The Holy
+#261|Come to the Saviour now|Christ/Call; Christ/Call, Answering His; Life in Christ/Call of Christ, The
+#262|Thy life was given for me|Christ/Call; Commitment; Life in Christ/Call of Christ, The; Redemption
+#263|Hark, my soul, it is the Lord!|Christ/Call; Christ/Call, Answering His; Christ/Love for; Life in Christ/Call of Christ, The
+#264, #264A|Art thou weary, art thou languid|Christ/Strength and Refuge
+#264A, #264|Art thou weary, art thou languid|Christ/Call; Christ/Love of; Life in Christ/Call of Christ, The
+#265|Sing them over again to me|Christ/Call; Christ/Life, Our; Life in Christ/Call of Christ, The; The Bible
+#266|O Jesus, Thou art standing|Christ/Call; Christ/Call, Answering His; Life in Christ/Call of Christ, The; Penitence; Sin
+#267|Jesus is tenderly calling thee home|Christ/Call; Life in Christ/Call of Christ, The
+#268|"Come unto Me, ye weary"|Christ/Call; Christ/Call, Answering His; Christ/Strength and Refuge; Life in Christ/Call of Christ, The; Sin
+#269|Jesus calls us; o'er the tumult|Christ/Call; Christ/Call, Answering His; Commitment; Life in Christ/Call of Christ, The
+#27|Ye servants of God, your Master proclaim|Adoration and Praise; Christ/Adoration and Praise; Christ/Conqueror; Christ/Exaltation; Christ/King; Christ/Master; Name of Jesus, The; Opening of Worship; Worship/Adoration and Praise
+#270, #270A|Lord Jesus, think on me|Christ/Strength and Refuge; Forgiveness; Life in Christ/Repentance and Forgiveness
+#270A, #270|Lord Jesus, think on me|Christ/Guide; Redemption
+#271|Rock of Ages, cleft for me|Christ/Strength and Refuge; Forgiveness; Humility; Life in Christ/Repentance and Forgiveness; Penitence
+#272|Just as I am, without one plea|Commitment; Confession; Forgiveness; Life in Christ/Repentance and Forgiveness; Penitence; Sin
+#273|Depth of mercy! can there be|Christ/Call, Answering His; Christ/Mercy; Forgiveness; God/Love and Fatherhood; Life in Christ/Repentance and Forgiveness; Penitence; Sin
+#274|Because I knew not when my life was good|Forgiveness; Life in Christ/Repentance and Forgiveness; Penitence; Sin
+#275, #275A|Amazing grace—how sweet the sound|Forgiveness; God/Grace; Life in Christ/Repentance and Forgiveness
+#275A, #275|Amazing grace—how sweet the sound|God/Strength and Refuge
+#276|There is a fountain filled with blood|Forgiveness; Life in Christ/Repentance and Forgiveness; Redemption; Sin
+#277|Lord, from the depths to Thee I cried|Faith; Forgiveness; Life in Christ/Repentance and Forgiveness; Penitence; Sin
+#278|I am coming to the cross|Christ/Call, Answering His; Commitment; Forgiveness; Life in Christ/Repentance and Forgiveness; Penitence
+#279|Jesus, I my cross have taken|Christ/Strength and Refuge; Contentment; Forgiveness; Life in Christ/Repentance and Forgiveness; Redemption
+#28|Let us with a gladsome mind|Adoration and Praise; God/Grace; God/Mercy; Worship/Adoration and Praise
+#280|I heard the voice of Jesus say|Christ/Call; Christ/Call, Answering His; Christ/Grace; Christ/Light; Forgiveness; Life in Christ/Repentance and Forgiveness
+#281|How blest is he whose trespass|Confession; Forgiveness; God/Strength and Refuge; Life in Christ/Repentance and Forgiveness; Penitence; Sin
+#282|God be merciful to me|Confession; Forgiveness; Life in Christ/Repentance and Forgiveness; Penitence; Sin
+#283|Go, labor on: spend and be spent|Church Workers; Constancy; Discipleship; Life in Christ/Discipleship and Service; Perseverance; Purpose
+#284|Draw Thou my soul, O Christ|Aspiration; Commitment; Discipleship; Life in Christ/Discipleship and Service; Prayer
+#285|Father, we greet Thee, God of Love, whose glory|Commitment; Discipleship; Life in Christ/Discipleship and Service
+#286|I bind my heart this tide|Brotherhood; Commitment; Discipleship; Life in Christ/Discipleship and Service
+#287|Come, labor on|Discipleship; Labor Day; Life in Christ/Discipleship and Service; Perseverance
+#288|Lord God of Hosts, whose purpose, never swerving|Discipleship; Life in Christ/Discipleship and Service; Missions; Unity
+#289|So let our lips and lives express|Commitment; Discipleship; Faith; Hope; Life in Christ/Discipleship and Service
+#29, #29A|O come and sing unto the Lord|Adoration and Praise; God/Nature, in
+#290|Must Jesus bear the cross alone|Cross, The; Discipleship; Life in Christ/Discipleship and Service
+#291|Hope of the world, Thou Christ of great compassion|Christ/Comforter; Christ/Guide; Commitment; Discipleship; Life in Christ/Discipleship and Service; Service
+#292|I'm not ashamed to own my Lord|Commitment; Discipleship; Life in Christ/Discipleship and Service; Trust
+#293|"Take up thy cross", the Saviour said|Commitment; Cross, The; Discipleship; Humility; Life in Christ/Discipleship and Service
+#294|We thank Thee, Lord, Thy paths of service lead|Christ/Beauty; Christ/Presence; Christ/Sympathy; Discipleship; Life in Christ/Discipleship and Service
+#295|Christ of the Upward Way|Christ/Guide; Christ/Leader; Discipleship; Life in Christ/Discipleship and Service
+#296|Come, ye that fear the Lord, and hear|Discipleship; Life in Christ/Discipleship and Service
+#297|Work, for the night is coming|Commitment; Life in Christ/Dedication and Consecration
+#298|Lord, speak to me, that I may speak|Commitment; Life in Christ/Dedication and Consecration
+#299|Master, no offering|Commitment; Life in Christ/Dedication and Consecration; Service
+#29A, #29|O come and sing unto the Lord|God/King; Nature; Worship/Adoration and Praise
+#3|Praise the Lord: ye heavens, adore Him|Adoration and Praise; God/Nature, in; Nature; Science; Worship/Adoration and Praise
+#30|Angel voices, ever singing|Adoration and Praise; Dedication Services/Of a Church; Installations/Minister of Music; Installations/Pastor; Trinity, The Holy; Worship/Adoration and Praise
+#300|Take time to be holy|Commitment; Discipleship; Life in Christ/Dedication and Consecration
+#301|A charge to keep I have|Commitment; Life in Christ/Dedication and Consecration; Service; Stewardship
+#302|Have Thine own way, Lord!|Christ/Master; Commitment; Life in Christ/Dedication and Consecration; Looking to Jesus
+#303|Be Thou my Vision, O Lord of my heart|Commitment; Constancy; Devotion; God/Love and Fatherhood; Life in Christ/Dedication and Consecration; Looking to Jesus
+#304|O Master, let me walk with Thee|Christ/Teacher; Commitment; Life in Christ/Dedication and Consecration; Looking to Jesus; Service; Walking with God
+#305|O Thou who makest souls to shine|Benediction; Church, The; Commitment; Life in Christ/Dedication and Consecration; Schools; Service
+#306|Take Thou our minds, dear Lord, we humbly pray|Christ/Guide; Commitment; Life in Christ/Dedication and Consecration; Service
+#307|O Jesus, I have promised|Christ/Master; Christ/Presence; Christ/Strength and Refuge; Commitment; Installations/Pastor; Life in Christ/Dedication and Consecration; Looking to Jesus; Ordination; Service
+#308, #308A|Make me a captive, Lord|Commitment
+#308A, #308|Make me a captive, Lord|Christ/Master; Christ/Presence; God/Will, Doing His; Life in Christ/Dedication and Consecration
+#309|Father, whose will is life and good|Commitment; Doctors and Nurses; Healing; Life in Christ/Dedication and Consecration; Service; Soldiers of Christ
+#31|Praise, my soul, the King of heaven|Adoration and Praise; God/King; God/Mercy; God/Strength and Refuge; Gratitude; Worship/Adoration and Praise
+#310|Take my life, and let it be|Commitment; Devotion; Life in Christ/Stewardship; Ordination; Stewardship
+#311|Saviour! Thy dying love|Commitment; Devotion; Lent; Life in Christ/Stewardship; Stewardship
+#312|We give Thee but Thine own|Commitment; Life in Christ/Stewardship; Stewardship
+#313|All things are Thine: no gift have we|Commitment; Dedication Services/Of a Church; God/Love and Fatherhood; Life in Christ/Stewardship; Stewardship
+#314|Christ, of all my hopes the Ground|Aspiration; Christ/Grace; Christ/Life, Our; Faith; Hope; Lent; Life Everlasting, The; Life in Christ/Hope and Aspiration; Trust
+#315|From Thee all skill and science flow|Aspiration; Christ/Grace; Christ/Master; Church, The/Church Triumphant; Hope; Life in Christ/Hope and Aspiration; Missions
+#316|More about Jesus would I know|Aspiration; Christ/Way, The; Hope; Lent; Life in Christ/Hope and Aspiration
+#317|Lord, I want to be a Christian|Aspiration; Hope; Life in Christ/Hope and Aspiration; Spirituals
+#318|There is a place of quiet rest|Aspiration; God/Strength and Refuge; Hope; Life in Christ/Hope and Aspiration; Redemption
+#319, #319A|O for a closer walk with God|Commitment; Devotion; Life in Christ/Hope and Aspiration
+#319A, #319|O for a closer walk with God|Aspiration; Christ/Lamb of God; Hope; Walking with God
+#31A|Praise my soul the King of heaven|Adoration and Praise; God/King; God/Mercy; God/Strength and Refuge; Gratitude; Worship/Adoration and Praise
+#32|What shall I render to the Lord|Adoration and Praise; God/Love and Fatherhood; God/Providence; Gratitude; Saints; Worship/Adoration and Praise
+#320|I am Thine, O Lord, I have heard Thy voice|Aspiration; Commitment; Hope; Lent; Life in Christ/Hope and Aspiration
+#321|My spirit longs for Thee|Aspiration; Christ/Strength and Refuge; Hope; Humility; Inner Life, The; Life in Christ/Hope and Aspiration
+#322|As pants the hart for cooling streams|Aspiration; Hope; Life in Christ/Hope and Aspiration; Trust
+#323|O let my supplicating cry|Aspiration; Bible, The; God/Guide; God/Shepherd; Hope; Life in Christ/Hope and Aspiration; Penitence
+#324|I need Thee every hour|Aspiration; Christ/Friend; Christ/Master; Christ/Strength and Refuge; Devotion; Hope; Life in Christ/Hope and Aspiration; Trust
+#325|O for a heart to praise my God!|Aspiration; Devotion; Hope; Humility; Life in Christ/Hope and Aspiration; Love and Communion; Penitence
+#326|Nearer, my God, to Thee|Aspiration; Hope; Life in Christ/Hope and Aspiration
+#327|O Lord, my God, most earnestly|Aspiration; Christ/Strength and Refuge; Contentment; God/Love and Fatherhood; Hope; Life in Christ/Hope and Aspiration; Serenity
+#328|Father of peace, and God of love|Aspiration; Christ/Saviour; Commitment; Hope; Life in Christ/Hope and Aspiration
+#329|O God, regard my humble plea|Aspiration; God/Strength and Refuge; Hope; Life in Christ/Hope and Aspiration
+#33|From all that dwell below the skies|Adoration and Praise; Christ/Adoration and Praise; Missions; Name of Jesus, The; Worship/Adoration and Praise
+#330|Rise, my soul, and stretch thy wings|Aspiration; Hope; Life in Christ/Hope and Aspiration; Perseverance
+#331|Lead, kindly Light, amid th' encircling gloom|Christ/Guide; Christ/Leader; Christ/Light; Lent; Life in Christ/Pilgrimage and Guidance of Life; Penitence; Pilgrimage of life
+#332|Lead on, O King Eternal|Cheerfulness; Christ/Guide; Christ/King; Church, The/Church Militant; Church, The/Church Triumphant; Life in Christ/Pilgrimage and Guidance of Life; Pilgrimage of life; Processionals; Soldiers of Christ
+#333|O brothers, lift your voices|#NAME?; Adoration and Praise; Church, The/Church Militant; Church, The/Church Triumphant; Life in Christ/Pilgrimage and Guidance of Life; Pilgrimage of life
+#334|Jesus, lead the way|Christ/Guide; Christ/Leader; Commitment; Life in Christ/Pilgrimage and Guidance of Life; Pilgrimage of life
+#335|O grant us light, that we may know|God/Guide; God/Light; Life in Christ/Pilgrimage and Guidance of Life; Pilgrimage of life
+#336|Jesus, Saviour, pilot me|Christ/Captain; Life in Christ/Pilgrimage and Guidance of Life; Pilgrimage of life
+#337|Far off I see the goal|Christ/Guide; Christ/Leader; Commitment; Life in Christ/Pilgrimage and Guidance of Life; Pilgrimage of life
+#338|He leadeth me: O blessed thought!|Christ/Guide; Christ/Leader; Contentment; Life in Christ/Pilgrimage and Guidance of Life; Pilgrimage of life
+#339, #339A|Guide me, O Thou great Jehovah|Pilgrimage of life
+#339A, #339|Guide me, O Thou great Jehovah|God/Guide; God/Strength and Refuge; Life in Christ/Pilgrimage and Guidance of Life
+#34|Ye watchers and ye holy ones|Adoration and Praise; Angels; Discipleship; Saints; Trinity, The Holy; Worship/Adoration and Praise
+#340|Children of the Heavenly King|Christ/Guide; Christ/Leader; Commitment; Communion of Saints; Life in Christ/Pilgrimage and Guidance of Life; Pilgrimage of life
+#341|Lead us, O Father, in the paths of peace|God/Guide; God/Leader; Life in Christ/Pilgrimage and Guidance of Life; Pilgrimage of life
+#342|O God of Beth-el, by whose hand|God/Guide; God/Leader; God/Providence; Life in Christ/Pilgrimage and Guidance of Life; Pilgrimage of life
+#343|Lead us, Heavenly Father, lead us|God/Grace; God/Guide; God/Leader; Life in Christ/Pilgrimage and Guidance of Life; Pilgrimage of life; Trinity, The Holy
+#344|If thou but suffer God to guide thee|God/Guide; Life in Christ/Pilgrimage and Guidance of Life; Pilgrimage of life; Stewardship; Trust
+#345|He who would valiant be|Confidence; Courage; Life in Christ/Pilgrimage and Guidance of Life; Perseverance; Pilgrimage of life; Trial and Conflict; Trust
+#346|Awake, my soul, stretch every nerve|Aspiration; Courage; Life in Christ/Loyalty and Courage; Loyalty; Morning; Pilgrimage of life; Processionals
+#347|God is my strong Salvation|Courage; God/Strength and Refuge; Life in Christ/Loyalty and Courage; Loyalty; Soldiers of Christ
+#348|Faith of our fathers! living still|Courage; Faith; Heritage; Life in Christ/Loyalty and Courage; Loyalty
+#349|Stand up, stand up for Jesus|Christ/Captain; Courage; Life in Christ/Loyalty and Courage; Loyalty; Processionals; Recessionals; Soldiers of Christ
+#35|All ye that fear God's holy name|Adoration and Praise; God/Grace; God/Love and Fatherhood; God/Providence; Gratitude; Worship/Adoration and Praise
+#350|Onward, Christian soldiers|Christ/Captain; Church, The/Church Militant; Courage; Heritage; Life in Christ/Loyalty and Courage; Loyalty; Perseverance; Processionals; Soldiers of Christ
+#351|March on, O soul, with strength!|Church, The/Church Militant; Citizenship; Constancy; Courage; Heritage; Life in Christ/Loyalty and Courage; Loyalty; Soldiers of Christ
+#352|Rise up, O men of God!|Brotherhood; Courage; Life in Christ/Loyalty and Courage; Loyalty; Perseverance; Processionals; Service
+#353|Am I a soldier of the cross|Courage; God/Captain; Life in Christ/Loyalty and Courage; Loyalty; Soldiers of Christ
+#354|The Son of God goes forth to war|Christ/Captain; Church, The/Church Militant; Courage; Heritage; Life in Christ/Loyalty and Courage; Loyalty; Soldiers of Christ
+#355|Who is on the Lord’s side?|Church, The/Church Militant; Courage; Life in Christ/Loyalty and Courage; Loyalty; Service
+#356|We are living, we are dwelling|Church, The/Church Militant; Citizenship; Life in Christ/Trial and Conflict; Loyalty; Missions; Nation, The; Trial and Conflict
+#357|Now Israel may say, and that in truth|Life in Christ/Trial and Conflict; Peace on Earth; Trial and Conflict; Unity; Victory
+#358|God of grace and God of glory|Church, The/Church Expectant; Citizenship; Courage; God/Guide; Life in Christ/Trial and Conflict; Nation, The; Soldiers of Christ; Trial and Conflict; War
+#359, #359A|Fight the good fight with all thy might|Christ/Strength and Refuge; Soldiers of Christ
+#359A, #359|Fight the good fight with all thy might|Christ/Guide; Courage; Life in Christ/Trial and Conflict; Trial and Conflict; Trust
+#36|Praise ye the Lord, for it is good|Adoration and Praise; God/Nature, in; God/Providence; Nature; Worship/Adoration and Praise
+#360|Christian, dost thou see them|Christ/Sympathy; Courage; God/Strength and Refuge; Life in Christ/Trial and Conflict; Perseverance; Prayer; Temptation; Trial and Conflict; Watchfulness
+#361|Once to every man and nation|Citizenship; Courage; Life in Christ/Trial and Conflict; Nation, The; Trial and Conflict
+#362|Soldiers of Christ, arise|Armed Services; Christ/Strength and Refuge; Courage; Life in Christ/Trial and Conflict; Soldiers of Christ; Trial and Conflict
+#363|My soul, be on thy guard|Courage; God/Strength and Refuge; Life in Christ/Trial and Conflict; Perseverance; Soldiers of Christ; Trial and Conflict; Watchfulness
+#364|Give to the winds thy fears|Assurance; Christ/Guide; Commitment; Courage; Faith; Life in Christ/Faith and Assurance; Trust
+#365|All the way my Saviour leads me|Assurance; Christ/Leader; Commitment; Faith; Life in Christ/Faith and Assurance; Trust
+#366|Whate'er my God ordains is right|Assurance; Contentment; Faith; God/Strength and Refuge; Life in Christ/Faith and Assurance; Submission; Trust
+#367|My Jesus, as Thou wilt!|Assurance; Commitment; Faith; Life in Christ/Faith and Assurance; Submission; Trust
+#368|My hope is built on nothing less|Assurance; Christ/Strength and Refuge; Comfort; Faith; Life in Christ/Faith and Assurance; Trust
+#369, #369A|How firm a foundation, ye saints of the Lord|Assurance; Faith; Life in Christ/Faith and Assurance
+#369A, #369|How firm a foundation, ye saints of the Lord|Christ/Founder of the Church; Comfort
+#37|O sing a new song to the Lord|Adoration and Praise; God/Eternity and Power; Opening of Worship; Worship/Adoration and Praise
+#370|I love the Lord, His strength is mine|Assurance; Cheerfulness; Comfort; Faith; God/Strength and Refuge; Life in Christ/Faith and Assurance; Trust
+#371|Ask ye what great thing I know|Assurance; Cheerfulness; Christ/Conqueror; Comfort; Faith; Life in Christ/Faith and Assurance
+#372|Grace and truth shall mark the way|Assurance; Comfort; Faith; God/Guide; Life in Christ/Faith and Assurance; Penitence
+#373|Come, ye disconsolate, where'er ye languish|Assurance; Comfort; Faith; Life in Christ/Faith and Assurance; Penitence; Spirit, The Holy
+#374|Be still, my soul: the Lord is on thy side|Assurance; Comfort; Courage; Faith; Hope; Life in Christ/Faith and Assurance; Patience
+#375|Who trusts in God, a strong abode|Assurance; Faith; God/Guide; God/Strength and Refuge; Life in Christ/Faith and Assurance
+#376|Jesus, keep me near the cross|Assurance; Cross, The; Faith; Life in Christ/Faith and Assurance; Trust
+#377|I to the hills will lift my eyes|Assurance; Comfort; Commitment; Faith; God/Strength and Refuge; Life in Christ/Faith and Assurance
+#378|My faith looks up to Thee|Assurance; Commitment; Faith; Life in Christ/Faith and Assurance
+#379|Come, Thou Fount of every blessing|Assurance; Christ/Grace; Commitment; Faith; Life in Christ/Faith and Assurance; Penitence
+#38|The earth, with all that dwell therein|Adoration and Praise; God/Eternity and Power; Opening of Worship; Purity of Life; Worship/Adoration and Praise
+#380|Saviour, like a Shepherd lead us|Assurance; Christ/Grace; Christ/Leader; Christ/Shepherd; Faith; Life in Christ/Faith and Assurance; Penitence
+#381|God is our Refuge and our Strength|Assurance; Church, The/Church Expectant; Courage; Faith; God/Strength and Refuge; Life in Christ/Faith and Assurance
+#382|Not so in haste my heart!|Assurance; Comfort; Courage; Faith; Hope; Life in Christ/Faith and Assurance; Patience
+#383|I love to tell the story|Assurance; Cheerfulness; Faith; Life in Christ/Faith and Assurance; Witnessing
+#384|Father, in Thy mysterious presence kneeling|Aspiration; Faith; God/Presence; Life in Christ/Prayer and Intercession; Perseverance; Prayer
+#385|What a Friend we have in Jesus|Christ/Strength and Refuge; Christ/Sympathy; Comfort; Life in Christ/Prayer and Intercession; Prayer
+#386|Approach, my soul, the mercy seat|Christ/Love of; Communion of Saints; Life in Christ/Prayer and Intercession; Penitence; Prayer; Sin
+#387|To God my earnest voice I raise|Christ/Strength and Refuge; Comfort; God/Strength and Refuge; Life in Christ/Prayer and Intercession; Prayer
+#388|O Lord Most High, with all my heart|Adoration and Praise; God/Strength and Refuge; Life in Christ/Prayer and Intercession; Prayer; Trust
+#389|Where high the heavenly temple stands|Christ/Sympathy; Life in Christ/Prayer and Intercession; Prayer
+#39|Come, ye people, rise and sing|Adoration and Praise; Trinity, The Holy; Worship/Adoration and Praise
+#390|Open my eyes, that I may see|Aspiration; Life in Christ/Prayer and Intercession; Prayer; Spirit, The Holy; Witnessing
+#391|Prayer is the soul's sincere desire|Christ/Way, The; Lent; Life in Christ/Prayer and Intercession; Penitence; Prayer
+#392|O Lord, make haste to hear my cry|Inner Life, The; Life in Christ/Prayer and Intercession; Meditation; Prayer
+#393|Thy loving-kindness, Lord, is good and free|Comfort; God/Grace; Life in Christ/Prayer and Intercession; Prayer
+#394|In the hour of trial|Christ/Intercession; Lent; Life in Christ/Prayer and Intercession; Prayer; Trust
+#395|God be in my head|Aspiration; God/Presence; Inner Life, The; Life in Christ/Prayer and Intercession; Prayer
+#396|O gracious God, forsake me not|Comfort; God/Strength and Refuge; Life in Christ/Prayer and Intercession; Prayer
+#397|More love to Thee, O Christ|Life in Christ/Prayer and Intercession; Prayer
+#398|Sweet hour of prayer, sweet hour of prayer|Life in Christ/Prayer and Intercession; Prayer; Trust
+#399|Love divine, all loves excelling|Christ/Love of; Christ/Second Coming; Christ/Sympathy; Life in Christ/Love; Love and Communion
+#4|Praise the Lord, His glories show|Adoration and Praise; God/Grace; God/Providence; Processionals; Science; Worship/Adoration and Praise
+#40|Open now thy gates of beauty|Adoration and Praise; Church, The; Opening of Worship; Processionals; Worship/Adoration and Praise
+#400|O Love that wilt not let me go|Christ/Love of; Commitment; Funeral Services; Life Everlasting, The; Life in Christ/Love; Love and Communion
+#401|Jesus, the very thought of Thee|Christ/Friend; Christ/Love of; Life in Christ/Love; Love and Communion; Name of Jesus, The
+#402|I sought the Lord, and afterward I knew|Commitment; Life in Christ/Love; Love and Communion
+#403|Tell me the old, old story|Bible, The; Christ/Light; Comfort; Life in Christ/Love; Love and Communion
+#404|Jesus, Thy boundless love to me|Christ/Guide; Christ/Love for; Christ/Love of; Commitment; Life in Christ/Love; Love and Communion; Prayer
+#405|My Jesus, I love Thee, I know Thou art mine|Christ/Love for; Commitment; Life in Christ/Love; Love and Communion
+#406|My heart is resting, O my God|Cheerfulness; Comfort; Contentment; Inner Life, The; Joy; Life in Christ/Joy; Trinity, The Holy
+#407|Rejoice, ye pure in heart|Cross, The; Gratitude; Joy; Life in Christ/Joy; Processionals
+#408|Come, we that love the Lord|Cheerfulness; Joy; Life in Christ/Joy; Processionals
+#409|My God, I thank Thee, who hast made|Contentment; God/Nature, in; Gratitude; Joy; Life in Christ/Joy; Rest
+#41|When morning gilds the skies|Adoration and Praise; Aspiration; Christ/Adoration and Praise; Christ/Light; Discipleship; God/Strength and Refuge; God/Will, Doing His; Morning; Worship/Morning
+#410|The King of Glory standeth|Christ/Conqueror; Joy; Life in Christ/Joy; Sin
+#411|Take the name of Jesus with you|Christ/Strength and Refuge; Joy; Life in Christ/Joy; Name of Jesus, The; Temptation; Trial and Conflict
+#412|The Lord I will at all times bless|Adoration and Praise; Joy; Life in Christ/Joy; Trust
+#413|I waited for the Lord my God|God/Protection; God/Strength and Refuge; Gratitude; Joy; Life in Christ/Joy; Patience; Witnessing
+#414|Jesus, priceless treasure|Ash Wednesday; Christ/Strength and Refuge; Commitment; God/Strength and Refuge; Joy; Life in Christ/Joy; Penitence
+#415|O Morning Star, how fair and bright|Aspiration; Christ/Light; Commitment; Life in Christ/Peace; Love and Communion; Peace, Spiritual
+#416|Dear Lord and Father of mankind|Christ/Call, Answering His; Christ/Way, The; Comfort; Inner Life, The; Life in Christ/Peace; Peace, Spiritual
+#417|In heavenly love abiding|Cheerfulness; Christ/Guide; Christ/Way, The; Contentment; Life in Christ/Peace; Peace, Spiritual; Walking with God
+#418|Sometimes a light surprises|Comfort; God/Presence; God/Providence; Life in Christ/Peace; Peace, Spiritual; Trust
+#419|From every stormy wind that blows|Christ/Strength and Refuge; Fellowship; God/Protection; Life in Christ/Peace; Peace, Spiritual; Prayer
+#42|As the sun doth daily rise|Bible, The; God/Guide; God/Providence; Morning; Worship/Morning
+#420|Peace, perfect peace, in this dark world of sin?|Assurance; Comfort; Life in Christ/Peace; Peace, Spiritual
+#421|They cast their nets in Galilee|Discipleship; Life in Christ/Peace; Peace, Spiritual; Stewardship
+#422|The steps of those whom He approves|Discipleship; Faith; God/Providence; God/Strength and Refuge; Life in Christ/Peace; Peace, Spiritual
+#423|Thou hidden Source of calm repose|Christ/Life; Christ/Strength and Refuge; Comfort; Life in Christ/Peace; Name of Jesus, The; Peace, Spiritual; Penitence
+#424|O what their joy and their glory must be|All Saints' Day; Communion of Saints; Life Everlasting, The; Life in Christ/Life Everlasting, The
+#425A, #425|For all the saints who from their labors rest|All Saints' Day; Christ/Captain; Church, The/Church Triumphant; Funeral Services; Life Everlasting, The; Life in Christ/Life Everlasting, The; Saints; Soldiers of Christ
+#426|Hark! hark, my soul! angelic songs are swelling|Funeral Services; Life Everlasting, The; Life in Christ/Life Everlasting, The
+#427|Ten thousand times ten thousand|All Saints' Day; Christ/Resurrection; Church, The/Church Triumphant; Funeral Services; Life Everlasting, The; Life in Christ/Life Everlasting, The
+#428|Jerusalem the golden|All Saints' Day; Church, The/Church Triumphant; Life Everlasting, The; Life in Christ/Life Everlasting, The
+#429|For thee, O dear, dear country|Life Everlasting, The; Life in Christ/Life Everlasting, The
+#43|Father, we praise Thee, now the night is over|Adoration and Praise; Morning; Salvation; Trinity, The Holy; Worship; Worship/Morning
+#430|Brief life is here our portion|Church, The/Church Triumphant; Life Everlasting, The; Life in Christ/Life Everlasting, The; Perseverance
+#431|O where are the kings and empires now|Church, The; Church, The/Church Triumphant
+#432|Built on the Rock the Church doth stand|Christ/Incarnation; Church, The; Dedication Services/Of a Church
+#433|Christ is made the sure Foundation|Christ/Founder of the Church; Church, The; Cornerstone Laying; Prayer
+#434|Glorious things of Thee are spoken|Church, The; Church, The/Church Triumphant; Dedication Services/Of a Church; Processionals
+#435|I love Thy Kingdom, Lord|Church, The; Church, The/Church Triumphant; Dedication Services/Of a Church; God/Kingdom
+#436|City of God, how broad and far|Church, The; Church, The/Church Triumphant; Dedication Services/Of a Church; Heritage; Unity
+#437, #437A|The Church's one Foundation|Communion of Saints
+#437A, #437|The Church's one Foundation|Church, The; Church, The/Church Expectant; Dedication Services/Of a Church; Love and Communion; Processionals; Unity
+#438|Within Thy temple's sacred courts|Adoration and Praise; Church, The; God/Guide
+#439|With joy I heard my friends exclaim|Church, The; Dedication Services/Of a Church
+#44|Come, my soul, thou must be waking|Devotion; Discipleship; God/Guide; Morning; Temptation; Worship/Morning
+#440|How dear to me, O Lord of hosts|Church, The; Dedication Services/Of a Church; God/Protection; God/Strength and Refuge
+#441|Pleasant are Thy courts above|Aspiration; Church, The; God/Guide; God/Strength and Refuge; Pilgrimage of life
+#442|Here, O my Lord, I see Thee face to face|Bread of Life, The; Church, The/Lord's Supper, The; Communion, Holy
+#443|A parting hymn we sing|Church, The/Lord's Supper, The; Closing of Worship; Communion, Holy
+#444|According to Thy gracious word|Bread of Life, The; Christ/Lamb of God; Church, The/Lord's Supper, The; Communion, Holy
+#445|Bread of the world in mercy broken|Bread of Life, The; Church, The/Lord's Supper, The; Communion, Holy; Penitence
+#446|Be known to us in breaking bread|Church, The/Lord's Supper, The; Communion, Holy; Love and Communion
+#447|Let us break bread together|Church, The/Lord's Supper, The; Communion, Holy; Spirituals
+#448|'Twas on that night when doomed to know|Church, The/Lord's Supper, The; Communion, Holy
+#449|For the bread, which Thou hast broken|Bread of Life, The; Church, The/Lord's Supper, The; Closing of Worship; Communion of Saints; Communion, Holy
+#45|New every morning is the love|Devotion; Discipleship; Morning; Worship/Morning
+#450|O Bread of Life, for all men broken|Bread of Life, The; Church, The/Lord's Supper, The; Communion, Holy
+#451|Jesus, Friend, so kind and gentle|Baptism; Christ/Children, His Love for; Church, The/Holy Baptism; Young, Hymns for the
+#452|O Jesus Christ, our Lord most dear|Baptism; Church, The/Holy Baptism
+#453|O perfect love, all human thought transcending|Church, The/Marriage; Marriage
+#454|O Love divine and golden|Church, The/Christian Home, The; Home, The; Marriage
+#455|O happy home, where Thou art loved the dearest|Church, The/Christian Home, The; Home, The
+#456|All things bright and beautiful|Church, The/Young, Hymns for the; Common Duties and Things; Young, Hymns for the
+#457|Saviour, teach me, day by day|Christ/Love for; Christ/Love of; Church, The/Young, Hymns for the; Young, Hymns for the
+#458|Father, lead me day by day|Church, The/Young, Hymns for the; Commitment; Discipleship; God/Guide; God/Strength and Refuge; Stewardship; Young, Hymns for the
+#459|Tell me the stories of Jesus|Christ/Love for; Christ/Triumphal Entry; Church, The/Young, Hymns for the; Young, Hymns for the
+#46|O Splendor of God's glory bright|Christ/Light; Faith; God/Light; Morning; Worship/Morning
+#460|I think when I read that sweet story of old|Christ/Children, His Love for; Church, The/Young, Hymns for the; Young, Hymns for the
+#461|It fell upon a summer day|Church, The/Young, Hymns for the; Love and Communion; Young, Hymns for the
+#462|Once in royal David's city|Christ/Advent; Christ/Master; Christ/Sympathy; Church, The/Young, Hymns for the; Young, Hymns for the
+#463|With happy voices ringing|Adoration and Praise; Cheerfulness; Church, The/Young, Hymns for the; God/Nature, in; Young, Hymns for the
+#464|Morning has broken|Adoration and Praise; Church, The/Young, Hymns for the; Joy; Morning; Nature; Young, Hymns for the
+#465|Jesus loves me! this I know|Christ/Love of; Church, The/Young, Hymns for the; Young, Hymns for the
+#466|God who made the earth|Church, The/Young, Hymns for the; God/Love and Fatherhood; God/Nature, in; Young, Hymns for the
+#467|Father, we thank Thee for the night|Church, The/Young, Hymns for the; God/Providence; Gratitude; Young, Hymns for the
+#468|O Thou whose feet have climbed life's hill|Christ/Teacher; Church, The/Youth, Hymns for; Purpose; Schools; Truth; Youth, Hymns for
+#469|Now in the days of youth|Church, The/Youth, Hymns for; Commitment; Discipleship; Service; Stewardship; Youth, Hymns for
+#47|Christ, whose glory fills the skies|Aspiration; Christ/Light; Morning; Opening of Worship; Processionals; Worship/Morning
+#470|We would be building; temples still undone|Christ/Teacher; Church, The/Youth, Hymns for; Commitment; Purpose; Unity; Youth, Hymns for
+#471|Shepherd of eager youth|Adoration and Praise; Christ/Guide; Christ/King; Christ/Leader; Christ/Shepherd; Church, The/Youth, Hymns for; Youth, Hymns for
+#472|Just as I am, Thine own to be|Church, The/Youth, Hymns for; Commitment; Confirmation; Youth, Hymns for
+#473|Blest be the tie that binds|Church, The; Church, The/Christian Fellowship; Communion of Saints; Fellowship; Unity
+#474|O brother man, fold to thy heart thy brother|Brotherhood; Christ/Example; Church, The/Christian Fellowship; Discipleship; Fellowship; Peace on Earth; Service
+#475|Through the night of doubt and sorrow|Brotherhood; Church, The/Christian Fellowship; Church, The/Church Expectant; Fellowship; Pilgrimage of life; Processionals; Recessionals; Unity
+#476|Forgive, O Lord, our severing ways|Church, The/Christian Fellowship; Church, The/Church Triumphant; Fellowship; Penitence; Unity
+#477|Put forth O God Thy Spirit's might|Church, The; Church, The/Christian Fellowship; Fellowship; Heritage; Life Everlasting, The; Unity
+#478|Hills of the North, rejoice|Brotherhood; Church, The/Church Triumphant; Kingdom of God on Earth, The/Brotherhood; Missions; Unity
+#479, #479A|In Christ there is no East or West|Love and Communion
+#479A, #479|In Christ there is no East or West|Brotherhood; Fellowship; Kingdom of God on Earth, The/Brotherhood
+#48|Hear my words, O gracious Lord|Aspiration; Morning; Opening of Worship; Processionals; Sin; Worship/Morning
+#480|Let there be light, Lord God of Hosts|Brotherhood; Kingdom of God on Earth, The/Brotherhood; Peace on Earth; Peace, Spiritual
+#481|Lift up our hearts, O King of Kings|Brotherhood; God/Light; Kingdom of God on Earth, The/Brotherhood; Penitence
+#482|The light of God is falling|Brotherhood; Christ/Call, Answering His; God/Light; Kingdom of God on Earth, The/Brotherhood; Service; Stewardship
+#483|O God of love, O King of peace|Communion of Saints; Kingdom of God on Earth, The/World Friendship and Peace; Peace on Earth; World Friendship and Peace
+#484|"Thy kingdom come," on bended knee|God/Kingdom; Kingdom of God on Earth, The/World Friendship and Peace; Peace on Earth; World Friendship and Peace
+#485|Eternal God, whose power upholds|Art and Literature; Brotherhood; God/Eternity and Power; God/Kingdom; Kingdom of God on Earth, The/World Friendship and Peace; Missions; Peace on Earth; Schools; Science; World Friendship and Peace
+#486|Father eternal, Ruler of creation|Armistice Day; Brotherhood; God/Kingdom; God/Will, Doing His; Kingdom of God on Earth, The/World Friendship and Peace; Peace on Earth; Penitence; World Friendship and Peace
+#487|God, the Omnipotent! King, who ordainest|Armistice Day; Kingdom of God on Earth, The/World Friendship and Peace; Peace on Earth; Penitence; World Friendship and Peace
+#488|Thy kingdom come, O Lord|God/Kingdom; Kingdom of God on Earth, The/World Friendship and Peace; Peace on Earth; World Friendship and Peace
+#489|Christ for the world we sing|Christ/Saviour; God/Kingdom; Kingdom of God on Earth, The/World Friendship and Peace; Missions; Peace on Earth; Service; Stewardship; World Friendship and Peace
+#49|When morning lights the eastern skies|Morning; Worship/Morning
+#490|Turn back, O man, forswear thy foolish ways|God/Kingdom; Kingdom of God on Earth, The/World Friendship and Peace; Peace on Earth; World Friendship and Peace
+#491|O Zion, haste, thy mission high fulfilling|Kingdom of God on Earth, The/Missions; Missions; Service; Stewardship
+#492|Christ is the world's true Light|Christ/King; God/Kingdom; Kingdom of God on Earth, The/Missions; Missions; Peace on Earth
+#493|Lord, bless and pity us|God/Kingdom; Kingdom of God on Earth, The/Missions; Missions
+#494|Ye Christian heralds, go proclaim|Kingdom of God on Earth, The/Missions; Missions; Stewardship
+#495|Remember all the people|God/Kingdom; Kingdom of God on Earth, The/Missions; Missions
+#496|Jesus shall reign where'er the sun|Christ/Adoration and Praise; God/Kingdom; Kingdom of God on Earth, The/Missions; Missions; Name of Jesus, The
+#497|Arm of the Lord, awake, awake!|God/King; Kingdom of God on Earth, The/Missions; Missions
+#498|Heralds of Christ, who bear the King's command|Christ/Way, The; Kingdom of God on Earth, The/Missions; Missions; Peace on Earth
+#499|The morning light is breaking|God/Kingdom; Kingdom of God on Earth, The/Missions; Missions
+#5|O Lord, Thou art my God and King|Adoration and Praise; Worship/Adoration and Praise
+#50|Awake, my soul, and with the sun|Adoration and Praise; Aspiration; Discipleship; God/Guide; Morning; Worship/Morning
+#500|God is working His purpose out|Kingdom of God on Earth, The/Missions; Missions; Soldiers of Christ
+#501|The ends of all the earth shall hear|God/Kingdom; Kingdom of God on Earth, The/Missions; Missions
+#502|Christ shall have dominion|Christ/King; God/Kingdom; Kingdom of God on Earth, The/Missions; Missions
+#503|We have heard the joyful sound|Christ/Saviour; Kingdom of God on Earth, The/Missions; Missions
+#504|We've a story to tell to the nations|Christ/King; God/Kingdom; Kingdom of God on Earth, The/Missions; Missions
+#505|Hail to the brightness of Zion's glad morning!|Kingdom of God on Earth, The/Missions; Missions
+#506|Fling out the banner! let it float|Cross, The; Kingdom of God on Earth, The/Missions; Missions; Recessionals
+#507|Where cross the crowded ways of life|Christ/Son of Man; City, The; Kingdom of God on Earth, The/City, The
+#508|O Holy City, seen of John|City, The; Kingdom of God on Earth, The/City, The
+#509|From ocean unto ocean|Armistice Day; Christ/King; Kingdom of God on Earth, The/Nation, The; Memorial Day; Nation, The; Patriotism
+#51|Now the day is over|Christ/Guide; Comfort; Devotion; Evening; Worship/Evening
+#510|O beautiful for spacious skies|Armistice Day; Kingdom of God on Earth, The/Nation, The; Memorial Day; Nation, The; Patriotism
+#511|O God of earth and altar|Kingdom of God on Earth, The/Nation, The; Memorial Day; Nation, The
+#512|Not alone for mighty empire|Armistice Day; Brotherhood; God/Judge; Kingdom of God on Earth, The/Nation, The; Nation, The; Patriotism; Thanksgiving
+#513|My country, 'tis of thee|Armistice Day; God/Protection; Kingdom of God on Earth, The/Nation, The; Memorial Day; Nation, The; Patriotism
+#514|God bless our native land|Brotherhood; God/Protection; Kingdom of God on Earth, The/Nation, The; Nation, The; Patriotism; Peace on Earth
+#515|God of our fathers, whose almighty hand|Armistice Day; God/Providence; Kingdom of God on Earth, The/Nation, The; Memorial Day; Nation, The; Processionals; Thanksgiving
+#516|My song forever shall record|Adoration and Praise; God/Nature, in; Kingdom of God on Earth, The/Nation, The; Nation, The
+#517|Judge eternal, throned in splendor|City, The; God/Judge; Kingdom of God on Earth, The/Nation, The; Nation, The
+#518|Arise, O Lord, our God, arise|Dedication Services/Of a Church
+#519|We dedicate this temple|Dedication Services/Of a Church
+#52|On the good and faithful|Evening; God/Love and Fatherhood; God/Strength and Refuge; Trust; Worship/Evening
+#520|God of the prophets! Bless the prophets' sons|Ministry, The; Ordination
+#521|Eternal Father, strong to save|Farewell Service; Travelers
+#522|Almighty Father, strong to save|Farewell Service; Travelers
+#523|O God, beneath Thy guiding hand|Heritage; Nation, The; Thanksgiving
+#524|We plow the fields and scatter|Gratitude; Harvest; Thanksgiving
+#525|Come, ye thankful people, come|Harvest; Thanksgiving
+#526|Ring out the old, ring in the new|New Year, The
+#527|Great God, we sing that mighty hand|God/Providence; God/Strength and Refuge; New Year, The
+#528|Let all who enter here|Service Music/Preparation for Prayer
+#529|Come, my soul, thy suit prepare|Service Music/Preparation for Prayer
+#53|Now God be with us, for the night is closing|Contentment; Evening; God/Presence; Lord's Prayer, The; Rest; Worship/Evening
+#530|Father, the watches of the night are o'er|Service Music/Opening Choral Prayers
+#531|Come dearest Lord, descend and dwell|Service Music/Opening Choral Prayers
+#532|O Thou who hearest every heartfelt prayer|Service Music/Opening Choral Prayers
+#533|Lord, for the mercies of the night|Service Music/Opening Choral Prayers
+#534|Let the words of my mouth and the meditation of my heart|Service Music/Choral Prayers
+#535|Hear our prayer, O Lord|Service Music/Choral Prayers
+#536|To my humble supplication|Service Music/Choral Prayers
+#537|Create in me a clean heart, O God|Service Music/Choral Prayers
+#538|Father, fill us with Thy love|Service Music/Choral Prayers
+#539|Lead me Lord, lead me in Thy righteousness|Service Music/Choral Prayers
+#54|Saviour, breathe an evening blessing|Christ/Strength and Refuge; Evening; Life Everlasting, The; Worship/Evening
+#540|The lone, wild fowl in lofty flight|Service Music/Choral Prayers
+#541|Day by day, Dear Lord, of Thee three things I pray|Service Music/Choral Prayers
+#542|Almighty Father, hear our prayer|Service Music/Choral Prayers
+#543|Part in peace: Christ's life was peace|Service Music/Closing Exhortation
+#544|Praise God from whom all blessings flow|Service Music/Doxologies
+#545, #546|Glory be to the Father|Service Music/Doxologies
+#547|Let Thy Word abide in us, O Lord|Service Music/Responses to Scriptures
+#548|O Lord, open Thou our eyes|Service Music/Responses to Scriptures
+#549|Father of mercies, in Thy Word|Service Music/Responses to Scriptures
+#55|At even, when the sun was set|Christ/Friend; Christ/Saviour; Christ/Son of Man; Christ/Strength and Refuge; Evening; Healing; Worship/Evening
+#550|Write these words in our hearts|Service Music/Responses to Scriptures
+#551|The sacrifices of God are a broken spirit|Service Music/Offertory Responses
+#552|We give Thee but Thine own|Service Music/Offertory Responses
+#553|Bless Thou the gifts our hands have brought|Service Music/Offertory Responses
+#554|O dearest Lord|Service Music/Offertory Responses
+#555|All things are Thine; no gift have we|Service Music/Offertory Responses
+#556|All things come of Thee, O Lord|Service Music/Offertory Responses
+#557|Father, give Thy benediction|Service Music/Closing Choral Prayer
+#558, #559|Amen|Service Music/Amens
+#56|Sun of my soul, Thou Saviour dear|Commitment; Evening; God/Protection; Worship/Evening
+#560, #561|Amen, Amen|Service Music/Amens
+#562, #563, #564, #565|Amen, Amen, Amen|Service Music/Amens
+#567|Amen, Amen, Amen, Amen, Amen, Amen, Amen|Service Music/Amens
+#568|Lord, have mercy upon us, and incline our hearts to keep this law|Service Music/Communion Service, The
+#569|Lord, have mercy, have mercy upon us|Service Music/Communion Service, The
+#57|Before the day draws near its ending|Adoration and Praise; Evening; Life Everlasting, The; Prayer; Worship/Evening
+#570|Lord, have mercy upon un|Service Music/Communion Service, The
+#571|Lord, have mercy upon us|Service Music/Communion Service, The
+#572|Glory be to God on high|Service Music/Communion Service, The
+#573, #574|Lift up your hearts|Service Music/Communion Service, The
+#575, #576, #577, #579|Glory be to Thee, O Lord|Service Music/Communion Service, The
+#578|Thanks be to Thee, O Christ|Service Music/Communion Service, The
+#58|God, that madest earth and heaven|Discipleship; Evening; God/Guide; God/Protection; Life Everlasting, The; Worship/Evening
+#580|Praise be to Thee, O Christ|Service Music/Communion Service, The
+#581, #583, #584|Holy, holy, holy, Lord God of Hosts|Service Music/Communion Service, The
+#582|Holy, holy, Lord God of Hosts|Service Music/Communion Service, The
+#585|O Lamb of God, that takest away the sins of the world|Service Music/Communion Service, The
+#586, #587, #588|O come, let us sing unto the Lord|Service Music/Morning Canticles
+#589, #590, #591|We praise Thee, O God; we acknowledge Thee to be the Lord|Service Music/Morning Canticles
+#59|The day Thou gavest, Lord, is ended|Church, The/Church Expectant; Evening; Prayer; Worship/Evening
+#592|Blessed be the Lord God of Israel|Service Music/Morning Canticles
+#593|O be joyful in the Lord|Service Music/Morning Canticles
+#594, #595|O be joyful in the Lord, all ye lands|Service Music/Morning Canticles
+#596|My soul doth magnify the Lord|Service Music/Evening Canticles
+#597, #598, #599, #600|Lord, now lettest Thou Thy servant depart in peace|Service Music/Evening Canticles
+#59A|The day thou gavest, Lord, is ended|Church, The/Church Expectant; Evening; Prayer; Worship/Evening
+#6|Heaven and earth, and sea and air|Adoration and Praise; God/Nature, in; Nature; Worship/Adoration and Praise
+#60|Softly now the light of day|Aspiration; Evening; Forgiveness; Life Everlasting, The; Penitence; Sin; Worship/Evening
+#61|O gladsome light, O grace|Adoration and Praise; Christ/Light; Evening; God/Light; Worship/Evening
+#62|Again, as evening's shadow falls|Contentment; Evening; Opening of Worship; Rest; Trial and Conflict; Worship/Evening
+#63|All praise to Thee, my God, this night|Adoration and Praise; Discipleship; Evening; Forgiveness; Rest; Worship/Evening
+#64|Abide with me: fast falls the eventide|Evening; God/Eternity and Power; God/Protection; Life Everlasting, The; Worship/Evening
+#65|Day is dying in the west|Adoration and Praise; Discipleship; Evening; God/Presence; God/Protection; Life Everlasting, The; Worship/Evening
+#66|Now woods and wolds are sleeping|Benediction; Benevolence; Brotherhood; Evening; Fellowship; God/Protection; Gratitude; Worship/Evening
+#67|Now, on land and sea descending|Adoration and Praise; Contentment; Evening; God/Creator; Peace, Spiritual; Serenity; Worship/Evening
+#68|When in the night I meditate|Evening; Faith; Hope; Trust; Worship/Evening
+#69|This is the day the Lord hath made|Christ/Resurrection; Church, The; Lord's Day, The; Saints; Salvation; Worship/Lord's Day, The
+#7|Of the Father's love begotten|Adoration and Praise; God/Creator; God/Eternity and Power; Worship/Adoration and Praise
+#70|O day of rest and gladness|Adoration and Praise; Lord's Day, The; Trinity, The Holy; Worship/Lord's Day, The
+#71|The glorious gates of righteousness|Lord's Day, The; Worship/Lord's Day, The
+#72|This is the day of light|God/Light; Lord's Day, The; Prayer; Rest; Worship/Lord's Day, The
+#73|Light of light, enlighten me|Aspiration; God/Light; Lord's Day, The; Morning; Rest; Worship/Lord's Day, The
+#74|Safely through another week|Aspiration; God/Presence; Lord's Day, The; Worship/Lord's Day, The
+#75|Praise our Father for this Sunday|Aspiration; Hope; Joy; Lord's Day, The; Trial and Conflict; Worship/Lord's Day, The
+#76|May the grace of Christ our Saviour|Benediction; Closing of Worship; Communion of Saints; Fellowship; Joy; Unity; Worship/Closing of Worship
+#77|Saviour, again to Thy dear name we raise|Benediction; Closing of Worship; Evening; Peace, Spiritual; Worship/Closing of Worship
+#78, #78A|God be with you till we meet again|God/Protection
+#78A, #78|God be with you till we meet again|Closing of Worship; Farewell Service; Travelers; Worship/Closing of Worship
+#79|Lord, dismiss us with Thy blessing|Aspiration; Benediction; Bible, The; Closing of Worship; Courage; Hope; Worship/Closing of Worship
+#8|Bless, O my soul! the living God|Adoration and Praise; Christ/Atonement; God/Grace; Redemption; Worship/Adoration and Praise
+#80|On our way rejoicing|Adoration and Praise; Assurance; Church, The/Church Triumphant; Closing of Worship; Hope; Joy; Trinity, The Holy; Worship/Closing of Worship
+#81|Before Jehovah's awful throne|Adoration and Praise; God/Creator; God/Eternity and Power; God/Shepherd; God the Father/His Eternity and Power
+#82|Thy mercy and Thy truth, O Lord|God/Eternity and Power; God/Justice; God/Light; God/Protection; God/Providence; God the Father/His Eternity and Power
+#83|The Lord is King! lift up thy voice|Adoration and Praise; God/Eternity and Power; God the Father/His Eternity and Power
+#84, #84A|I sing the mighty power of God|Adoration and Praise; God/Nature, in
+#84A, #84|I sing the mighty power of God|God/Creator; God/Eternity and Power; God/Providence; God the Father/His Eternity and Power
+#85|Immortal, invisible, God only wise|Adoration and Praise; God/Eternity and Power; God/Life; God/Light; God/Nature, in; God the Father/His Eternity and Power; Nature
+#86|Begin, my tongue, some heavenly theme|Adoration and Praise; Aspiration; God/Eternity and Power; God the Father/His Eternity and Power
+#87|Lord of all being, throned afar|Adoration and Praise; God/Eternity and Power; God/Light; God/Mercy; God the Father/His Eternity and Power
+#88|Lord, Thou hast been our dwelling place|Aspiration; Commitment; God/Eternity and Power; God/Guide; God/Will, Doing His; God the Father/His Eternity and Power
+#89|The God of Abraham praise|Adoration and Praise; God/Eternity and Power; God the Father/His Eternity and Power
+#9|Now thank we all our God|Adoration and Praise; God/Eternity and Power; Gratitude; Thanksgiving; Worship/Adoration and Praise
+#90|God, the Lord, a King remaineth|Adoration and Praise; Christ/Birth and Infancy; God/Eternity and Power; God/King; God/Nature, in; God/Truth; God the Father/His Eternity and Power
+#91|A mighty fortress is our God|Assurance; Courage; God/Eternity and Power; God/Presence; God the Father/His Eternity and Power; Perseverance; Sin; Temptation; Trial and Conflict; Trust; Victory
+#92|O God, the Rock of Ages|Discipleship; God/Eternity and Power; God the Father/His Eternity and Power
+#93|O God, Thou art the Father|God/Creator; God/Eternity and Power; God/Grace; God/Judge; God/Life; God/Light; God the Father/His Eternity and Power; Serenity
+#94|The Lord Almighty reigns|God/Eternity and Power; God/Nature, in; God the Father/His Eternity and Power; Ministry, The
+#95|O Lord our Lord, in all the earth|Adoration and Praise; God/Eternity and Power; God/Grace; God/Nature, in; God the Father/His Eternity and Power
+#96|All beautiful the march of days|God/Creator; God/Nature, in; God the Father/in Nature; Nature; New Year, The
+#97|The spacious firmament on high|God/Creator; God/Nature, in; God the Father/in Nature; Nature; Science
+#98|Praise ye, praise ye the Lord|Adoration and Praise; God/Nature, in; God the Father/in Nature; Nature
+#99|Thy might sets fast the mountains|Adoration and Praise; God/Nature, in; God/Providence; God the Father/in Nature; Nature
