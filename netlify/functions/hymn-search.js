@@ -70,7 +70,8 @@ exports.handler = async (event) => {
 
   try {
     const params = event.queryStringParameters || {};
-    const query = (params.q || '').trim();
+    let query = (params.q || '').trim();
+    query = query.replace(/^["'\u201C\u201D\u2018\u2019]+|["'\u201C\u201D\u2018\u2019]+$/g, '').trim();
 
     if (!query) {
       return { statusCode: 200, headers, body: JSON.stringify({ status: 'empty' }) };
