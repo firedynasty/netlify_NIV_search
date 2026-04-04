@@ -877,13 +877,13 @@
 
           // Found — render matched hymn + similar list
           const h = data.hymn;
-          const hymnaryBase = 'https://hymnary.org/hymn/H1955/';
+          const googleSearch = title => `https://www.google.com/search?q=${encodeURIComponent(title)}`;
           const scoreLabel = data.aiIndex ? 'AI semantic similarity' : 'topic overlap (run build_hymn_index.py for AI scoring)';
 
           let html = `
             <div class="result-item" style="border-left:3px solid #4a9eff;padding-left:10px;margin-bottom:12px">
               <div class="result-header">
-                <a href="${hymnaryBase}${h.num.replace('#','')}" class="result-title" target="_blank">${h.num} &mdash; ${h.title}</a>
+                <a href="${googleSearch(h.title)}" class="result-title" target="_blank">${h.num} &mdash; ${h.title}</a>
               </div>
               <div style="margin-top:4px">
                 ${h.topics.map(t => `<span class="hymn-tag" style="display:inline-block;background:#e8f0fe;border-radius:3px;padding:1px 6px;margin:2px;font-size:0.85em">${t}</span>`).join('')}
@@ -897,7 +897,7 @@
             html += `
               <div class="result-item">
                 <div class="result-header">
-                  <a href="${hymnaryBase}${s.hymn.replace('#','')}" class="result-title" target="_blank">${s.hymn} &mdash; ${s.title}</a>
+                  <a href="${googleSearch(s.title)}" class="result-title" target="_blank">${s.hymn} &mdash; ${s.title}</a>
                   <span class="result-book">${pct}%</span>
                 </div>
                 <div style="margin-top:4px">
