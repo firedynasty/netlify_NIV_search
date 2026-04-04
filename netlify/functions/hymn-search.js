@@ -21,17 +21,26 @@ function loadIndex() {
   return similarityIndex;
 }
 
+function stripPunctuation(s) {
+  return s.toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, ' ').trim();
+}
+
 // Find hymns whose title contains the query, or match by number
 function findHymn(query) {
   const hymns = loadHymns();
   const q = query.toLowerCase().trim();
+  const qStripped = stripPunctuation(q);
 
   // Exact hymn number match first
   const numMatch = hymns.find(h => h.num.replace('#', '') === q || h.num.toLowerCase() === q);
   if (numMatch) return { type: 'exact', hymn: numMatch };
 
-  // Title substring matches
-  const titleMatches = hymns.filter(h => h.title.toLowerCase().includes(q));
+  // Title substring matches — try exact first, then punctuation-stripped
+  let titleMatches = hymns.filter(h => h.title.toLowerCase().includes(q));
+  if (!titleMatches.length) {
+    titleMatches = hymns.filter(h => stripPunctuation(h.title).includes(qStripped));
+  }
+
   if (titleMatches.length === 1) return { type: 'exact', hymn: titleMatches[0] };
   if (titleMatches.length > 1) return { type: 'multiple', hymns: titleMatches };
 
