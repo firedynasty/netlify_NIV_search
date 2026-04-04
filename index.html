@@ -521,6 +521,7 @@
       <div class="input-row" style="justify-content: center; gap: 16px;">
         <label style="cursor:pointer"><input type="radio" name="version" value="nlt" checked onchange="switchVersion(this.value)"> NLT</label>
         <label style="cursor:pointer"><input type="radio" name="version" value="esv" onchange="switchVersion(this.value)"> ESV</label>
+        <label style="cursor:pointer"><input type="radio" name="version" value="hymns" onchange="switchVersion(this.value)"> Hymns</label>
       </div>
       <div style="text-align: center; margin-bottom: 4px;">
         <a href="https://www.youtube.com/watch?v=-kDLL-V86EA&t=10s" target="_blank" style="font-size: 13px; color: #4a9eff;">ESV Audio Bible</a>
@@ -630,7 +631,8 @@
     let currentVersion = 'nlt';
     const API_URLS = {
       nlt: '/.netlify/functions/nlt-search',
-      esv: '/.netlify/functions/esv-search'
+      esv: '/.netlify/functions/esv-search',
+      hymns: '/.netlify/functions/hymn-search'
     };
     const BIBLE_GATEWAY_URL = 'https://www.biblegateway.com/passage/';
 
@@ -649,13 +651,41 @@
       currentVersion = version;
       const bookSelect = document.getElementById('book');
       const title = document.getElementById('page-title');
-      if (version === 'esv') {
+      const helpDiv = document.querySelector('.help');
+
+      if (version === 'hymns') {
+        bookSelect.style.display = 'none';
+        title.textContent = 'Hymn Search';
+        if (helpDiv) helpDiv.innerHTML = `
+          <p>Search through 608 hymns from the 1955 Hymnal.</p>
+          <p>Examples:</p>
+          <ul>
+            <li><code>love</code> - search by first line words</li>
+            <li><code>assurance</code> - search by topic</li>
+            <li><code>370</code> - look up a hymn by number</li>
+            <li><code>trust</code> - find all hymns on a theme</li>
+          </ul>`;
+      } else if (version === 'esv') {
+        bookSelect.style.display = '';
         bookSelect.innerHTML = ESV_BOOKS_HTML;
         title.textContent = 'ESV Bible Search';
+        if (helpDiv) helpDiv.innerHTML = `<p>Search through the ESV Bible.</p>`;
       } else {
+        bookSelect.style.display = '';
         bookSelect.innerHTML = NLT_BOOKS_HTML;
         title.textContent = 'NLT Bible Search';
+        if (helpDiv) helpDiv.innerHTML = `
+          <p>Search through the complete NLT Bible (66 books).</p>
+          <p>Examples:</p>
+          <ul>
+            <li><code>love</code> - search all books</li>
+            <li><code>beginning</code> + Genesis - search only Genesis</li>
+            <li><code>eternal life</code> + John - search Gospel of John</li>
+            <li><code>Gen 31</code> or <code>Genesis 31</code> - view a chapter</li>
+            <li><code>Ps 23</code>, <code>Matt 5</code>, <code>1 John 3</code> - abbreviations work too</li>
+          </ul>`;
       }
+      document.getElementById('output').innerHTML = '';
     }
 
     // Chapter counts for each book
@@ -747,6 +777,11 @@
       applyFontSize();
     })();
 
+    // Dark mode topic tag style
+    const tagStyle = document.createElement('style');
+    tagStyle.textContent = `body.dark-mode .hymn-tag { background: #1f3a6e !important; color: #c8d8ff; }`;
+    document.head.appendChild(tagStyle);
+
     // Parse input like "Gen 31", "Genesis 31", "Ps 23", "Matt 11:28", "1 John 3"
     function parseReference(input) {
       // Match: optional number prefix + book name + chapter (+ optional :verse)
@@ -797,6 +832,79 @@
               <div class="chapter-text">${data.text}</div>
             </div>
           `;
+          html += '</div>';
+          output.innerHTML = html;
+
+        } catch (err) {
+          output.innerHTML = `<div class="error">Error: ${err.message}</div>`;
+        } finally {
+          btn.disabled = false;
+          btn.textContent = 'Search';
+        }
+        return;
+      }
+
+      // Hymn similarity path
+      if (currentVersion === 'hymns') {
+        btn.disabled = true;
+        btn.textContent = 'Searching...';
+        output.innerHTML = '<div class="loading">Finding similar hymns...</div>';
+
+        try {
+          const params = new URLSearchParams({ q: keyword });
+          const response = await fetch(`${API_URLS.hymns}?${params}`);
+          const data = await response.json();
+
+          if (data.status === 'not_found') {
+            output.innerHTML = `<div class="no-results">No hymn found matching "${keyword}"</div>`;
+            return;
+          }
+
+          // Multiple matches — show pick list
+          if (data.status === 'multiple') {
+            let html = `<div class="stats">Multiple hymns match — click one to find similar:</div><div class="results">`;
+            for (const m of data.matches) {
+              html += `<div class="result-item" style="cursor:pointer" onclick="hymnLookup('${m.num.replace('#','')}')">
+                <div class="result-header">
+                  <span class="result-title">${m.num} &mdash; ${m.title}</span>
+                </div>
+              </div>`;
+            }
+            html += '</div>';
+            output.innerHTML = html;
+            return;
+          }
+
+          // Found — render matched hymn + similar list
+          const h = data.hymn;
+          const hymnaryBase = 'https://hymnary.org/hymn/H1955/';
+          const scoreLabel = data.aiIndex ? 'AI semantic similarity' : 'topic overlap (run build_hymn_index.py for AI scoring)';
+
+          let html = `
+            <div class="result-item" style="border-left:3px solid #4a9eff;padding-left:10px;margin-bottom:12px">
+              <div class="result-header">
+                <a href="${hymnaryBase}${h.num.replace('#','')}" class="result-title" target="_blank">${h.num} &mdash; ${h.title}</a>
+              </div>
+              <div style="margin-top:4px">
+                ${h.topics.map(t => `<span class="hymn-tag" style="display:inline-block;background:#e8f0fe;border-radius:3px;padding:1px 6px;margin:2px;font-size:0.85em">${t}</span>`).join('')}
+              </div>
+            </div>
+            <div class="stats">Similar hymns &mdash; ${scoreLabel}</div>
+            <div class="results">`;
+
+          for (const s of data.similar) {
+            const pct = Math.round(s.score * 100);
+            html += `
+              <div class="result-item">
+                <div class="result-header">
+                  <a href="${hymnaryBase}${s.hymn.replace('#','')}" class="result-title" target="_blank">${s.hymn} &mdash; ${s.title}</a>
+                  <span class="result-book">${pct}%</span>
+                </div>
+                <div style="margin-top:4px">
+                  ${(s.shared_topics || []).map(t => `<span class="hymn-tag" style="display:inline-block;background:#e8f0fe;border-radius:3px;padding:1px 6px;margin:2px;font-size:0.85em">${t}</span>`).join('')}
+                </div>
+              </div>`;
+          }
           html += '</div>';
           output.innerHTML = html;
 
@@ -860,6 +968,11 @@
         btn.disabled = false;
         btn.textContent = 'Search';
       }
+    }
+
+    function hymnLookup(num) {
+      document.getElementById('keyword').value = num;
+      doSearch({ preventDefault: () => {} });
     }
 
     // Allow pressing Enter in the keyword field
