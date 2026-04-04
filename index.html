@@ -782,6 +782,24 @@
     tagStyle.textContent = `body.dark-mode .hymn-tag { background: #1f3a6e !important; color: #c8d8ff; }`;
     document.head.appendChild(tagStyle);
 
+    // Auto-search from URL parameter: ?q=Be+still+my+soul&v=hymns
+    (function() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const q = urlParams.get('q');
+      const v = urlParams.get('v');
+      if (q) {
+        if (v) {
+          const radio = document.querySelector(`input[name="version"][value="${v}"]`);
+          if (radio) { radio.checked = true; switchVersion(v); }
+        } else {
+          const radio = document.querySelector('input[name="version"][value="hymns"]');
+          if (radio) { radio.checked = true; switchVersion('hymns'); }
+        }
+        document.getElementById('keyword').value = q;
+        doSearch({ preventDefault: () => {} });
+      }
+    })();
+
     // Parse input like "Gen 31", "Genesis 31", "Ps 23", "Matt 11:28", "1 John 3"
     function parseReference(input) {
       // Match: optional number prefix + book name + chapter (+ optional :verse)
