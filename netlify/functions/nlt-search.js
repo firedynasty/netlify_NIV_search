@@ -263,6 +263,59 @@ function getChapter(bookFilter, chapter) {
   };
 }
 
+function searchNext(keyword, startBookKey, startChapter, maxChapters = 30) {
+  const data = loadData();
+  const bookKeys = Object.keys(AVAILABLE_BOOKS);
+  const startIdx = bookKeys.indexOf(startBookKey);
+  if (startIdx === -1) return { keyword, results: [], chaptersSearched: 0, endBook: '', endChapter: 0 };
+
+  // Strip Kindle citation and quotes
+  keyword = keyword.replace(/\s*[\r\n]+\s*[\s\S]*?Kindle Edition\.?\s*$/i, '');
+  keyword = keyword.replace(/^["'\u201C\u201D\u2018\u2019]+|["'\u201C\u201D\u2018\u2019]+$/g, '');
+  keyword = keyword.trim();
+
+  const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const pattern = escaped.replace(/\s+/g, '[,;:.\\-\\u2014]*\\s+');
+  const regex = new RegExp(pattern, 'gi');
+
+  const results = [];
+  let chaptersSearched = 0;
+  let lastBook = '';
+  let lastChapter = 0;
+
+  for (let bookIdx = startIdx; bookIdx < bookKeys.length && chaptersSearched < maxChapters; bookIdx++) {
+    const bookKey = bookKeys[bookIdx];
+    const canonicalName = getCanonicalBookName(bookKey);
+    const bookData = data[canonicalName];
+    if (!bookData || !bookData.chapters) continue;
+
+    const totalChapters = AVAILABLE_BOOKS[bookKey].chapters;
+    const chStart = (bookIdx === startIdx) ? startChapter : 1;
+
+    for (let ch = chStart; ch <= totalChapters && chaptersSearched < maxChapters; ch++) {
+      chaptersSearched++;
+      lastBook = AVAILABLE_BOOKS[bookKey].name;
+      lastChapter = ch;
+
+      const chapterText = bookData.chapters[ch.toString()];
+      if (!chapterText) continue;
+
+      const matches = chapterText.match(regex);
+      if (matches && matches.length > 0) {
+        results.push({
+          book: AVAILABLE_BOOKS[bookKey].name,
+          bookKey: bookKey,
+          chapter: ch,
+          count: matches.length,
+          contexts: getContext(chapterText, keyword)
+        });
+      }
+    }
+  }
+
+  return { keyword, results, chaptersSearched, endBook: lastBook, endChapter: lastChapter };
+}
+
 function getBookStructure() {
   const data = loadData();
   const structure = {};
@@ -308,6 +361,47 @@ exports.handler = async (event, context) => {
         statusCode: 200,
         headers,
         body: JSON.stringify({ bookStructure: structure })
+      };
+    }
+
+    if (action === 'searchNext') {
+      const keyword = params.q || '';
+      const startBook = params.startBook || '';
+      const startChapter = parseInt(params.startChapter) || 1;
+      const maxChapters = parseInt(params.maxChapters) || 30;
+
+      if (!keyword || !startBook) {
+        return {
+          statusCode: 400,
+          headers,
+          body: JSON.stringify({ error: 'Keyword and starting book required' })
+        };
+      }
+
+      const normalizedBook = normalizeBookName(startBook);
+      if (!normalizedBook) {
+        return {
+          statusCode: 400,
+          headers,
+          body: JSON.stringify({ error: 'Invalid starting book' })
+        };
+      }
+
+      const result = searchNext(keyword, normalizedBook, startChapter, maxChapters);
+      const totalMatches = result.results.reduce((sum, r) => sum + r.count, 0);
+
+      return {
+        statusCode: 200,
+        headers,
+        body: JSON.stringify({
+          keyword: result.keyword,
+          totalMatches,
+          chapterCount: result.results.length,
+          chaptersSearched: result.chaptersSearched,
+          endBook: result.endBook,
+          endChapter: result.endChapter,
+          results: result.results
+        })
       };
     }
 

@@ -507,6 +507,400 @@
     body.dark-mode .chapter-count {
       color: #888;
     }
+
+    /* Search Next modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-box {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      width: 95%;
+      max-width: 600px;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    }
+
+    body.dark-mode .modal-box {
+      background: #1a1a2e;
+      border: 1px solid #333;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .modal-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+    }
+
+    body.dark-mode .modal-title {
+      color: #eee;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: #666;
+      padding: 0 4px;
+    }
+
+    body.dark-mode .modal-close {
+      color: #aaa;
+    }
+
+    .modal-form {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .modal-form input {
+      flex: 1;
+      padding: 8px 12px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: #fff;
+      color: #333;
+    }
+
+    body.dark-mode .modal-form input {
+      border-color: #444;
+      background: #16213e;
+      color: #fff;
+    }
+
+    .modal-form button {
+      padding: 8px 16px;
+      font-size: 13px;
+      background: #0d9488;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .modal-form button:hover {
+      background: #0f766e;
+    }
+
+    .modal-results {
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .modal-info {
+      text-align: center;
+      color: #666;
+      font-size: 12px;
+      margin-bottom: 8px;
+    }
+
+    body.dark-mode .modal-info {
+      color: #888;
+    }
+
+    .modal-result-btn {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: #f0f4f8;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 8px 12px;
+      margin-bottom: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      color: #333;
+      line-height: 1.4;
+    }
+
+    body.dark-mode .modal-result-btn {
+      background: #0f3460;
+      border-color: #1a4a80;
+      color: #ddd;
+    }
+
+    .modal-result-btn:hover {
+      background: #e0ecf8;
+    }
+
+    body.dark-mode .modal-result-btn:hover {
+      background: #1a4a80;
+    }
+
+    .modal-result-btn .ref {
+      font-weight: 600;
+      color: #2070c0;
+      margin-right: 8px;
+    }
+
+    body.dark-mode .modal-result-btn .ref {
+      color: #4a9eff;
+    }
+
+    .modal-result-btn mark {
+      background: #ffeb3b;
+      color: #333;
+      padding: 0 1px;
+      border-radius: 2px;
+    }
+
+    body.dark-mode .modal-result-btn mark {
+      background: #ffc107;
+      color: #000;
+    }
+
+    /* Position tracker row */
+    .position-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .position-row select {
+      padding: 4px 8px;
+      font-size: 13px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: #fff;
+      color: #333;
+    }
+
+    body.dark-mode .position-row select {
+      border-color: #444;
+      background: #16213e;
+      color: #fff;
+    }
+
+    .position-label {
+      font-size: 12px;
+      color: #888;
+    }
+
+    .search-next-btn {
+      padding: 4px 10px;
+      font-size: 12px;
+      background: #0d9488;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .search-next-btn:hover {
+      background: #0f766e;
+    }
+
+    .ref-btn {
+      padding: 4px 10px;
+      font-size: 12px;
+      background: #3b82f6;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .ref-btn:hover {
+      background: #2563eb;
+    }
+
+    .ref-history-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .ref-history-btn {
+      padding: 5px 10px;
+      font-size: 12px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      background: #f0f4ff;
+      color: #1d4ed8;
+    }
+
+    body.dark-mode .ref-history-btn {
+      border-color: #555;
+      background: #383838;
+      color: #93c5fd;
+    }
+
+    .ref-history-btn:hover {
+      background: #dbeafe;
+    }
+
+    body.dark-mode .ref-history-btn:hover {
+      background: #444;
+    }
+
+    .ref-history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .ref-history-label {
+      font-size: 11px;
+      color: #888;
+      font-weight: 600;
+    }
+
+    .ref-history-clear {
+      font-size: 11px;
+      color: #dc2626;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      padding: 2px 6px;
+    }
+
+    body.dark-mode .ref-history-clear {
+      color: #f87171;
+    }
+
+    .ref-paste-area {
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    body.dark-mode .ref-paste-area {
+      border-top-color: #444;
+    }
+
+    .ref-paste-label {
+      font-size: 11px;
+      color: #888;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .ref-paste-hint {
+      font-size: 11px;
+      color: #aaa;
+      margin-bottom: 6px;
+      font-style: italic;
+      line-height: 1.4;
+    }
+
+    body.dark-mode .ref-paste-hint {
+      color: #666;
+    }
+
+    .ref-paste-hint span {
+      color: #3b82f6;
+    }
+
+    body.dark-mode .ref-paste-hint span {
+      color: #93c5fd;
+    }
+
+    .ref-textarea {
+      width: 100%;
+      min-height: 80px;
+      padding: 10px;
+      font-size: 13px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: #fff;
+      color: #333;
+      box-sizing: border-box;
+      resize: vertical;
+      font-family: inherit;
+      line-height: 1.4;
+    }
+
+    body.dark-mode .ref-textarea {
+      border-color: #555;
+      background: #16213e;
+      color: #fff;
+    }
+
+    .ref-parsed-list {
+      margin-top: 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .ref-parsed-btn {
+      display: block;
+      width: 100%;
+      padding: 8px 12px;
+      font-size: 13px;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      background: #fafbff;
+      cursor: pointer;
+      text-align: left;
+      color: #333;
+    }
+
+    body.dark-mode .ref-parsed-btn {
+      border-color: #444;
+      background: #0f3460;
+      color: #ddd;
+    }
+
+    .ref-parsed-btn:hover {
+      background: #eef2ff;
+    }
+
+    body.dark-mode .ref-parsed-btn:hover {
+      background: #1a4a80;
+    }
+
+    .ref-parsed-btn .ref-label {
+      font-weight: 600;
+      color: #667eea;
+    }
+
+    .ref-parsed-desc {
+      display: block;
+      font-size: 11px;
+      color: #888;
+      margin-top: 2px;
+    }
+
+    body.dark-mode .ref-parsed-desc {
+      color: #aaa;
+    }
   </style>
 </head>
 <body>
@@ -612,9 +1006,143 @@
       </div>
     </form>
 
+    <div class="position-row" id="position-row">
+      <span class="position-label">I'm at:</span>
+      <select id="pos-book" onchange="updatePositionChapter(); savePosition();">
+        <option value="genesis">Genesis</option>
+        <option value="exodus">Exodus</option>
+        <option value="leviticus">Leviticus</option>
+        <option value="numbers">Numbers</option>
+        <option value="deuteronomy">Deuteronomy</option>
+        <option value="joshua">Joshua</option>
+        <option value="judges">Judges</option>
+        <option value="ruth">Ruth</option>
+        <option value="1_samuel">1 Samuel</option>
+        <option value="2_samuel">2 Samuel</option>
+        <option value="1_kings">1 Kings</option>
+        <option value="2_kings">2 Kings</option>
+        <option value="1_chronicles">1 Chronicles</option>
+        <option value="2_chronicles">2 Chronicles</option>
+        <option value="ezra">Ezra</option>
+        <option value="nehemiah">Nehemiah</option>
+        <option value="esther">Esther</option>
+        <option value="job">Job</option>
+        <option value="psalms">Psalms</option>
+        <option value="proverbs">Proverbs</option>
+        <option value="ecclesiastes">Ecclesiastes</option>
+        <option value="song_of_solomon">Song of Solomon</option>
+        <option value="isaiah">Isaiah</option>
+        <option value="jeremiah">Jeremiah</option>
+        <option value="lamentations">Lamentations</option>
+        <option value="ezekiel">Ezekiel</option>
+        <option value="daniel">Daniel</option>
+        <option value="hosea">Hosea</option>
+        <option value="joel">Joel</option>
+        <option value="amos">Amos</option>
+        <option value="obadiah">Obadiah</option>
+        <option value="jonah">Jonah</option>
+        <option value="micah">Micah</option>
+        <option value="nahum">Nahum</option>
+        <option value="habakkuk">Habakkuk</option>
+        <option value="zephaniah">Zephaniah</option>
+        <option value="haggai">Haggai</option>
+        <option value="zechariah">Zechariah</option>
+        <option value="malachi">Malachi</option>
+        <option value="matthew">Matthew</option>
+        <option value="mark">Mark</option>
+        <option value="luke">Luke</option>
+        <option value="john">John</option>
+        <option value="acts">Acts</option>
+        <option value="romans">Romans</option>
+        <option value="1_corinthians">1 Corinthians</option>
+        <option value="2_corinthians">2 Corinthians</option>
+        <option value="galatians">Galatians</option>
+        <option value="ephesians">Ephesians</option>
+        <option value="philippians">Philippians</option>
+        <option value="colossians">Colossians</option>
+        <option value="1_thessalonians">1 Thessalonians</option>
+        <option value="2_thessalonians">2 Thessalonians</option>
+        <option value="1_timothy">1 Timothy</option>
+        <option value="2_timothy">2 Timothy</option>
+        <option value="titus">Titus</option>
+        <option value="philemon">Philemon</option>
+        <option value="hebrews">Hebrews</option>
+        <option value="james">James</option>
+        <option value="1_peter">1 Peter</option>
+        <option value="2_peter">2 Peter</option>
+        <option value="1_john">1 John</option>
+        <option value="2_john">2 John</option>
+        <option value="3_john">3 John</option>
+        <option value="jude">Jude</option>
+        <option value="revelation">Revelation</option>
+      </select>
+      <select id="pos-chapter" onchange="savePosition()">
+        <option value="1">1</option>
+      </select>
+      <button type="button" class="ref-btn" onclick="openRefModal()" title="Go to a Bible reference">Ref</button>
+      <button type="button" class="search-next-btn" onclick="openSearchNextModal()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        Search Next 30 (Modal)
+      </button>
+    </div>
+
+    <!-- Search Next Modal -->
+    <div id="search-next-modal" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeSearchNextModal()">
+      <div class="modal-box">
+        <div class="modal-header">
+          <span class="modal-title" id="modal-title">Search next 30 chapters (NLT)</span>
+          <button class="modal-close" onclick="closeSearchNextModal()">&times;</button>
+        </div>
+        <div class="modal-form">
+          <input type="text" id="modal-keyword" placeholder="Search keyword..." onkeypress="if(event.key==='Enter')doSearchNext()">
+          <button onclick="doSearchNext()">Search</button>
+          <button onclick="document.getElementById('modal-keyword').value='';document.getElementById('modal-results').innerHTML='';document.getElementById('modal-info').textContent=''" style="background:#666">Clear</button>
+        </div>
+        <div class="modal-info" id="modal-info"></div>
+        <div class="modal-results" id="modal-results"></div>
+      </div>
+    </div>
+
+    <!-- Ref Modal -->
+    <div id="ref-modal" class="modal-overlay" style="display:none" onclick="if(event.target===this)closeRefModal()">
+      <div class="modal-box">
+        <div class="modal-header">
+          <span class="modal-title">Go to Reference</span>
+          <button class="modal-close" onclick="closeRefModal()">&times;</button>
+        </div>
+
+        <!-- History -->
+        <div id="ref-history-section" style="display:none;margin-bottom:10px">
+          <div class="ref-history-header">
+            <span class="ref-history-label">History</span>
+            <button class="ref-history-clear" onclick="clearRefHistory()">Clear</button>
+          </div>
+          <div class="ref-history-row" id="ref-history-row"></div>
+        </div>
+
+        <!-- Input -->
+        <div class="modal-form">
+          <input type="text" id="ref-input" placeholder="e.g. Ps 23, Matt 11, 1 John 3" onkeydown="if(event.key==='Enter'){event.preventDefault();goToRef();}">
+          <button onclick="goToRef()" style="background:#3b82f6">Go</button>
+        </div>
+
+        <!-- Result display -->
+        <div id="ref-result" style="margin-top:12px"></div>
+
+        <!-- Paste area -->
+        <div class="ref-paste-area" id="ref-paste-area">
+          <div class="ref-paste-label">Paste sermon notes / commentary</div>
+          <div class="ref-paste-hint">Quoted refs like <span>"Eph 5:25"</span> are extracted as clickable links</div>
+          <textarea class="ref-textarea" id="ref-paste" placeholder='Paste text with quoted refs, e.g.&#10;&#10;"Ephesians 5:25, 33"&#10; — Husbands are called to love...' oninput="parseRefPaste()"></textarea>
+          <div class="ref-parsed-list" id="ref-parsed-list"></div>
+        </div>
+      </div>
+    </div>
+
     <div id="output">
       <div class="help">
         <p>Search through the complete NLT Bible (66 books).</p>
+        <p>Search Next 30 (Modal) will search through NLT based on where you have the dropdown.</p>
         <p>Examples:</p>
         <ul>
           <li><code>love</code> - search all books</li>
@@ -680,6 +1208,7 @@
         title.textContent = 'NLT Bible Search';
         if (helpDiv) helpDiv.innerHTML = `
           <p>Search through the complete NLT Bible (66 books).</p>
+        <p>Search Next 30 (Modal) will search through NLT based on where you have the dropdown.</p>
           <p>Examples:</p>
           <ul>
             <li><code>love</code> - search all books</li>
@@ -1016,6 +1545,364 @@
         doSearch(e);
       }
     });
+
+    // --- Position tracker & Search Next 30 ---
+
+    function updatePositionChapter() {
+      const bookKey = document.getElementById('pos-book').value;
+      const chapterSelect = document.getElementById('pos-chapter');
+      const maxCh = BOOK_CHAPTERS[bookKey] || 1;
+      const currentCh = parseInt(chapterSelect.value) || 1;
+      chapterSelect.innerHTML = '';
+      for (let i = 1; i <= maxCh; i++) {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = i;
+        chapterSelect.appendChild(opt);
+      }
+      chapterSelect.value = Math.min(currentCh, maxCh);
+    }
+
+    function savePosition() {
+      const bookKey = document.getElementById('pos-book').value;
+      const chapter = document.getElementById('pos-chapter').value;
+      localStorage.setItem('readingBook', bookKey);
+      localStorage.setItem('readingChapter', chapter);
+    }
+
+    function loadPosition() {
+      const savedBook = localStorage.getItem('readingBook') || 'genesis';
+      const savedChapter = localStorage.getItem('readingChapter') || '1';
+      document.getElementById('pos-book').value = savedBook;
+      updatePositionChapter();
+      document.getElementById('pos-chapter').value = savedChapter;
+    }
+
+    // Show/hide position row based on version (only for Bible, not hymns)
+    function updatePositionVisibility() {
+      const row = document.getElementById('position-row');
+      row.style.display = (currentVersion === 'hymns') ? 'none' : 'flex';
+    }
+
+    function getPositionLabel() {
+      const bookSelect = document.getElementById('pos-book');
+      const bookName = bookSelect.options[bookSelect.selectedIndex].textContent;
+      const chapter = document.getElementById('pos-chapter').value;
+      return `${bookName} ${chapter}`;
+    }
+
+    function openSearchNextModal() {
+      const modal = document.getElementById('search-next-modal');
+      const title = document.getElementById('modal-title');
+      title.textContent = `Search next 30 chapters (NLT) from ${getPositionLabel()}`;
+      modal.style.display = 'flex';
+      document.getElementById('modal-keyword').focus();
+    }
+
+    function closeSearchNextModal() {
+      document.getElementById('search-next-modal').style.display = 'none';
+    }
+
+    async function doSearchNext() {
+      const keyword = document.getElementById('modal-keyword').value.trim();
+      if (!keyword) return;
+
+      const startBook = document.getElementById('pos-book').value;
+      const startChapter = document.getElementById('pos-chapter').value;
+      const resultsDiv = document.getElementById('modal-results');
+      const infoDiv = document.getElementById('modal-info');
+
+      resultsDiv.innerHTML = '<div style="text-align:center;color:#888;padding:12px">Searching...</div>';
+      infoDiv.textContent = '';
+
+      try {
+        const params = new URLSearchParams({
+          action: 'searchNext',
+          q: keyword,
+          startBook: startBook,
+          startChapter: startChapter,
+          maxChapters: 30
+        });
+
+        const response = await fetch(`${API_URLS.nlt}?${params}`);
+        const data = await response.json();
+
+        if (data.error) {
+          resultsDiv.innerHTML = `<div style="text-align:center;color:#c44;padding:12px">${data.error}</div>`;
+          return;
+        }
+
+        infoDiv.textContent = data.chaptersSearched > 0
+          ? `${data.totalMatches} result(s) found \u2014 searched ${data.chaptersSearched} ch, ending at ${data.endBook} ${data.endChapter}`
+          : '';
+
+        if (!data.results || data.results.length === 0) {
+          resultsDiv.innerHTML = '<div style="text-align:center;color:#888;padding:12px">No matches found</div>';
+          return;
+        }
+
+        const kw = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const highlightRegex = new RegExp(`(${kw})`, 'gi');
+
+        let html = '';
+        for (const r of data.results) {
+          const ref = `${r.book} ${r.chapter}`;
+          const bibleUrl = getBibleUrl(r.bookKey, r.chapter);
+          // Show first context snippet
+          const snippet = r.contexts && r.contexts.length > 0 ? r.contexts[0] : '';
+          html += `<button class="modal-result-btn" onclick="window.open('${bibleUrl}','_blank')">
+            <span class="ref">${ref}</span>
+            <span>${snippet}</span>
+          </button>`;
+        }
+        resultsDiv.innerHTML = html;
+
+      } catch (err) {
+        resultsDiv.innerHTML = `<div style="text-align:center;color:#c44;padding:12px">Error: ${err.message}</div>`;
+      }
+    }
+
+    // Escape key toggles Search Next modal
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        // Close Ref modal if open
+        if (document.getElementById('ref-modal').style.display !== 'none') {
+          closeRefModal();
+          return;
+        }
+        // Toggle Search Next modal
+        if (document.getElementById('search-next-modal').style.display !== 'none') {
+          closeSearchNextModal();
+        } else {
+          openSearchNextModal();
+        }
+      }
+    });
+
+    // Initialize position tracker
+    loadPosition();
+    updatePositionVisibility();
+
+    // Patch switchVersion to show/hide position row
+    const _origSwitchVersion = switchVersion;
+    switchVersion = function(version) {
+      _origSwitchVersion(version);
+      updatePositionVisibility();
+    };
+
+    // --- Ref Modal ---
+
+    // Book abbreviation map for parsing references
+    const REF_ABBREVS = {
+      'gen': 'genesis', 'ge': 'genesis', 'gn': 'genesis',
+      'ex': 'exodus', 'exod': 'exodus',
+      'lev': 'leviticus', 'le': 'leviticus',
+      'num': 'numbers', 'nu': 'numbers', 'nm': 'numbers',
+      'deut': 'deuteronomy', 'de': 'deuteronomy', 'dt': 'deuteronomy',
+      'josh': 'joshua', 'jos': 'joshua',
+      'judg': 'judges', 'jdg': 'judges',
+      'ruth': 'ruth', 'ru': 'ruth',
+      '1sam': '1_samuel', '1sa': '1_samuel', '1 sam': '1_samuel', '1 samuel': '1_samuel',
+      '2sam': '2_samuel', '2sa': '2_samuel', '2 sam': '2_samuel', '2 samuel': '2_samuel',
+      '1ki': '1_kings', '1 ki': '1_kings', '1 kings': '1_kings',
+      '2ki': '2_kings', '2 ki': '2_kings', '2 kings': '2_kings',
+      '1chr': '1_chronicles', '1 chr': '1_chronicles', '1 chronicles': '1_chronicles', '1 chron': '1_chronicles',
+      '2chr': '2_chronicles', '2 chr': '2_chronicles', '2 chronicles': '2_chronicles', '2 chron': '2_chronicles',
+      'ezr': 'ezra', 'ezra': 'ezra',
+      'neh': 'nehemiah', 'nehemiah': 'nehemiah',
+      'est': 'esther', 'esther': 'esther',
+      'job': 'job',
+      'ps': 'psalms', 'psa': 'psalms', 'psalm': 'psalms', 'psalms': 'psalms',
+      'prov': 'proverbs', 'pr': 'proverbs', 'proverbs': 'proverbs',
+      'eccl': 'ecclesiastes', 'ecc': 'ecclesiastes', 'ecclesiastes': 'ecclesiastes',
+      'song': 'song_of_solomon', 'sos': 'song_of_solomon', 'song of solomon': 'song_of_solomon',
+      'isa': 'isaiah', 'isaiah': 'isaiah',
+      'jer': 'jeremiah', 'jeremiah': 'jeremiah',
+      'lam': 'lamentations', 'lamentations': 'lamentations',
+      'ezek': 'ezekiel', 'eze': 'ezekiel', 'ezekiel': 'ezekiel',
+      'dan': 'daniel', 'daniel': 'daniel',
+      'hos': 'hosea', 'hosea': 'hosea',
+      'joel': 'joel',
+      'amos': 'amos', 'am': 'amos',
+      'obad': 'obadiah', 'ob': 'obadiah', 'obadiah': 'obadiah',
+      'jonah': 'jonah', 'jon': 'jonah',
+      'mic': 'micah', 'micah': 'micah',
+      'nah': 'nahum', 'nahum': 'nahum',
+      'hab': 'habakkuk', 'habakkuk': 'habakkuk',
+      'zeph': 'zephaniah', 'zep': 'zephaniah', 'zephaniah': 'zephaniah',
+      'hag': 'haggai', 'haggai': 'haggai',
+      'zech': 'zechariah', 'zec': 'zechariah', 'zechariah': 'zechariah',
+      'mal': 'malachi', 'malachi': 'malachi',
+      'matt': 'matthew', 'mt': 'matthew', 'mat': 'matthew', 'matthew': 'matthew',
+      'mark': 'mark', 'mk': 'mark', 'mr': 'mark',
+      'luke': 'luke', 'lk': 'luke', 'lu': 'luke',
+      'john': 'john', 'jn': 'john', 'joh': 'john',
+      'acts': 'acts', 'ac': 'acts',
+      'rom': 'romans', 'romans': 'romans',
+      '1cor': '1_corinthians', '1 cor': '1_corinthians', '1 corinthians': '1_corinthians',
+      '2cor': '2_corinthians', '2 cor': '2_corinthians', '2 corinthians': '2_corinthians',
+      'gal': 'galatians', 'galatians': 'galatians',
+      'eph': 'ephesians', 'ephesians': 'ephesians',
+      'phil': 'philippians', 'php': 'philippians', 'philippians': 'philippians',
+      'col': 'colossians', 'colossians': 'colossians',
+      '1thess': '1_thessalonians', '1 thess': '1_thessalonians', '1 thessalonians': '1_thessalonians',
+      '2thess': '2_thessalonians', '2 thess': '2_thessalonians', '2 thessalonians': '2_thessalonians',
+      '1tim': '1_timothy', '1 tim': '1_timothy', '1 timothy': '1_timothy',
+      '2tim': '2_timothy', '2 tim': '2_timothy', '2 timothy': '2_timothy',
+      'titus': 'titus', 'tit': 'titus',
+      'philem': 'philemon', 'phm': 'philemon', 'philemon': 'philemon',
+      'heb': 'hebrews', 'hebrews': 'hebrews',
+      'james': 'james', 'jas': 'james', 'jam': 'james',
+      '1pet': '1_peter', '1 pet': '1_peter', '1 peter': '1_peter',
+      '2pet': '2_peter', '2 pet': '2_peter', '2 peter': '2_peter',
+      '1john': '1_john', '1 john': '1_john', '1jn': '1_john', '1 jn': '1_john',
+      '2john': '2_john', '2 john': '2_john', '2jn': '2_john', '2 jn': '2_john',
+      '3john': '3_john', '3 john': '3_john', '3jn': '3_john', '3 jn': '3_john',
+      'jude': 'jude',
+      'rev': 'revelation', 'revelation': 'revelation',
+      'genesis': 'genesis', 'exodus': 'exodus', 'leviticus': 'leviticus',
+      'numbers': 'numbers', 'deuteronomy': 'deuteronomy', 'joshua': 'joshua',
+      'judges': 'judges'
+    };
+
+    // Display name for book key
+    function bookDisplayName(bookKey) {
+      const opt = document.querySelector(`#pos-book option[value="${bookKey}"]`);
+      return opt ? opt.textContent : bookKey;
+    }
+
+    // Parse a single reference string like "Ps 23" or "1 John 3:16"
+    function parseRefString(input) {
+      input = input.trim();
+      const m = input.match(/^(\d?\s*[a-z]+(?:\s+of\s+[a-z]+)?)\s+(\d+)(?::(\d+(?:\s*[-,]\s*\d+)*))?$/i);
+      if (!m) return null;
+      const bookRaw = m[1].trim().toLowerCase();
+      const chapter = parseInt(m[2]);
+      const verse = m[3] || null;
+      const bookKey = REF_ABBREVS[bookRaw];
+      if (!bookKey) return null;
+      if (chapter < 1 || chapter > (BOOK_CHAPTERS[bookKey] || 999)) return null;
+      return { bookKey, chapter, verse, display: `${bookDisplayName(bookKey)} ${chapter}${verse ? ':' + verse : ''}` };
+    }
+
+    // Ref history (stored in localStorage)
+    let refHistory = JSON.parse(localStorage.getItem('refHistory') || '[]');
+
+    function renderRefHistory() {
+      const section = document.getElementById('ref-history-section');
+      const row = document.getElementById('ref-history-row');
+      if (refHistory.length === 0) {
+        section.style.display = 'none';
+        return;
+      }
+      section.style.display = 'block';
+      row.innerHTML = refHistory.map((h, i) =>
+        `<button class="ref-history-btn" onclick="navigateRef('${h.bookKey}',${h.chapter})">${h.display}</button>`
+      ).join('');
+    }
+
+    function addToRefHistory(parsed) {
+      const key = `${parsed.bookKey}_${parsed.chapter}`;
+      if (refHistory.some(h => `${h.bookKey}_${h.chapter}` === key)) return;
+      refHistory.push({ bookKey: parsed.bookKey, chapter: parsed.chapter, display: parsed.display });
+      if (refHistory.length > 20) refHistory = refHistory.slice(-20);
+      localStorage.setItem('refHistory', JSON.stringify(refHistory));
+      renderRefHistory();
+    }
+
+    function clearRefHistory() {
+      refHistory = [];
+      localStorage.setItem('refHistory', '[]');
+      renderRefHistory();
+    }
+
+    function openRefModal() {
+      document.getElementById('ref-modal').style.display = 'flex';
+      renderRefHistory();
+      document.getElementById('ref-input').focus();
+    }
+
+    function closeRefModal() {
+      document.getElementById('ref-modal').style.display = 'none';
+    }
+
+    // Navigate to a reference: set the "I'm at" dropdowns to that book/chapter
+    function navigateRef(bookKey, chapter) {
+      document.getElementById('pos-book').value = bookKey;
+      updatePositionChapter();
+      document.getElementById('pos-chapter').value = chapter;
+      savePosition();
+      closeRefModal();
+    }
+
+    function goToRef() {
+      const input = document.getElementById('ref-input').value.trim();
+      if (!input) return;
+
+      // Try to parse each comma-separated ref
+      const refs = input.split(',').map(r => r.trim()).filter(r => r);
+      for (const r of refs) {
+        const parsed = parseRefString(r);
+        if (parsed) {
+          addToRefHistory(parsed);
+        }
+      }
+
+      // Navigate to the first valid ref
+      const firstParsed = parseRefString(refs[0]);
+      if (firstParsed) {
+        navigateRef(firstParsed.bookKey, firstParsed.chapter);
+        document.getElementById('ref-input').value = '';
+      } else {
+        document.getElementById('ref-result').innerHTML = `<div style="color:#c44;font-size:13px;text-align:center">Could not parse reference: "${refs[0]}"</div>`;
+      }
+    }
+
+    // Parse pasted text for quoted Bible references
+    function parseRefPaste() {
+      const text = document.getElementById('ref-paste').value;
+      const listDiv = document.getElementById('ref-parsed-list');
+
+      if (!text.trim()) {
+        listDiv.innerHTML = '';
+        return;
+      }
+
+      // Find quoted references: "Eph 5:25" or "Genesis 1:1"
+      const quotePattern = /["\u201C]([^"\u201D]+)["\u201D]/g;
+      const found = [];
+      let match;
+
+      while ((match = quotePattern.exec(text)) !== null) {
+        const inside = match[1].trim();
+        // Try to parse as a Bible reference (may have commas for multiple verses)
+        const parts = inside.split(/,\s*/);
+        const firstPart = parts[0].trim();
+        const parsed = parseRefString(firstPart);
+        if (parsed) {
+          // Get surrounding context
+          const start = Math.max(0, match.index - 60);
+          const end = Math.min(text.length, match.index + match[0].length + 60);
+          let context = text.slice(start, end).trim();
+          if (start > 0) context = '...' + context;
+          if (end < text.length) context = context + '...';
+
+          found.push({ parsed, raw: inside, context });
+        }
+      }
+
+      if (found.length === 0) {
+        listDiv.innerHTML = '<div style="font-size:12px;color:#888;padding:4px">No quoted references found</div>';
+        return;
+      }
+
+      listDiv.innerHTML = found.map(f =>
+        `<button class="ref-parsed-btn" onclick="addToRefHistory({bookKey:'${f.parsed.bookKey}',chapter:${f.parsed.chapter},display:'${f.parsed.display.replace(/'/g,"\\'")}'}); navigateRef('${f.parsed.bookKey}',${f.parsed.chapter})">
+          <span class="ref-label">${f.parsed.display}</span>
+          <span class="ref-parsed-desc">${f.context.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</span>
+        </button>`
+      ).join('');
+    }
   </script>
 </body>
 </html>
