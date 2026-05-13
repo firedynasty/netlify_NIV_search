@@ -1662,20 +1662,19 @@
       }
     }
 
-    // Escape key toggles Search Next modal
+    // Escape key focuses the book dropdown (and closes any open modal first)
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') {
         // Close Ref modal if open
         if (document.getElementById('ref-modal').style.display !== 'none') {
           closeRefModal();
-          return;
         }
-        // Toggle Search Next modal
+        // Close Search Next modal if open
         if (document.getElementById('search-next-modal').style.display !== 'none') {
           closeSearchNextModal();
-        } else {
-          openSearchNextModal();
         }
+        // Focus the book dropdown
+        document.getElementById('pos-book').focus();
       }
     });
 
