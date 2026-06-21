@@ -89,6 +89,23 @@ function search(keyword, bookFilter, maxResults = 50) {
   keyword = keyword.replace(/^["'\u201C\u201D\u2018\u2019]+|["'\u201C\u201D\u2018\u2019]+$/g, '');
   keyword = keyword.trim();
 
+  // Parse exclusions: words prefixed with - (e.g. "rough -brought")
+  const allWords = keyword.split(/\s+/);
+  const excludeWords = [];
+  const includeWords = [];
+  for (const w of allWords) {
+    if (w.startsWith('-') && w.length > 1) {
+      excludeWords.push(w.slice(1));
+    } else {
+      includeWords.push(w);
+    }
+  }
+  keyword = includeWords.join(' ');
+  const excludeRegexes = excludeWords.map(w => {
+    const esc = w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return new RegExp(`\\b${esc}\\b`, 'i');
+  });
+
   const normalizedBook = normalizeBookName(bookFilter);
   const booksToSearch = normalizedBook
     ? [normalizedBook]
@@ -114,6 +131,8 @@ function search(keyword, bookFilter, maxResults = 50) {
       if (!bookData || !bookData.chapters) continue;
 
       for (const [chapterNum, chapterText] of Object.entries(bookData.chapters)) {
+        if (excludeRegexes.some(re => re.test(chapterText))) continue;
+
         const matches = chapterText.match(regex);
         if (matches && matches.length > 0) {
           results.push({
