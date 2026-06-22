@@ -1884,7 +1884,7 @@
         }
 
         const kw = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        const highlightRegex = new RegExp(`(${kw})`, 'gi');
+        const highlightRegex = new RegExp(`\\b(${kw})\\b`, 'gi');
 
         let html = '';
         for (const r of data.results) {

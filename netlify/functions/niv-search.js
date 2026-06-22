@@ -53,7 +53,8 @@ function getCanonicalBookName(bookKey) {
 }
 
 function getContext(text, keyword, contextChars = 150) {
-  const regex = new RegExp(keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+  const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex = new RegExp(`\\b${escaped}\\b`, 'gi');
   const contexts = [];
   let match;
 
@@ -93,7 +94,8 @@ function search(keyword, bookFilter, maxResults = 50) {
   const results = [];
 
   const normalizedBook = normalizeBookName(bookFilter);
-  const regex = new RegExp(keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+  const escapedKw = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex = new RegExp(`\\b${escapedKw}\\b`, 'gi');
 
   // Determine which books to search
   const booksToSearch = normalizedBook

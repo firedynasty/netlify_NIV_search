@@ -109,7 +109,8 @@ function getBookCode(bookName) {
 }
 
 function getContext(text, keyword, contextChars = 150) {
-  const regex = new RegExp(keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+  const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex = new RegExp(`\\b${escaped}\\b`, 'gi');
   const contexts = [];
   let match;
 
@@ -147,7 +148,8 @@ function search(keyword, bookFilter, maxResults = 50) {
   const results = [];
 
   const bookCode = getBookCode(bookFilter);
-  const regex = new RegExp(keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+  const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex = new RegExp(`\\b${escaped}\\b`, 'gi');
 
   for (const doc of data.documents) {
     // Filter by book if specified

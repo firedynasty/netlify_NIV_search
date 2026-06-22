@@ -126,7 +126,8 @@ function getCanonicalBookName(bookKey) {
 }
 
 function getContext(text, keyword, contextChars = 40) {
-  const regex = new RegExp(keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+  const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex = new RegExp(`\\b${escaped}\\b`, 'gi');
   const contexts = [];
   const seen = new Set();
   let match;
@@ -208,7 +209,7 @@ function search(keyword, bookFilter, maxResults = 50) {
     // Allow optional punctuation between words so "children obey" matches "children, obey"
     const escaped = attempt.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const pattern = escaped.replace(/\s+/g, '[,;:.\\-\\u2014]*\\s+');
-    const regex = new RegExp(pattern, 'gi');
+    const regex = new RegExp(`\\b${pattern}\\b`, 'gi');
 
     for (const bookKey of booksToSearch) {
       const canonicalName = getCanonicalBookName(bookKey);
@@ -295,7 +296,7 @@ function searchNext(keyword, startBookKey, startChapter, maxChapters = 30) {
 
   const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const pattern = escaped.replace(/\s+/g, '[,;:.\\-\\u2014]*\\s+');
-  const regex = new RegExp(pattern, 'gi');
+  const regex = new RegExp(`\\b${pattern}\\b`, 'gi');
 
   const results = [];
   let chaptersSearched = 0;
