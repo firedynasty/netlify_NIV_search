@@ -1310,6 +1310,9 @@
       </div>
     </div>
 
+    <!-- Page down button -->
+    <button id="page-down-btn" onclick="window.scrollBy({top: window.innerHeight * 0.9, behavior: 'smooth'})" title="Page down" style="position: fixed; bottom: 50%; left: 6px; z-index: 10; width: 48px; height: 48px; background: rgba(0, 0, 0, 0.08); border-radius: 50%; border: 1.5px solid rgb(0, 0, 0); opacity: 0.15; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s;" onmouseenter="this.style.background='rgba(0,0,0,0.12)';this.style.opacity='0.2';this.style.transform='scale(1.1)'" onmouseleave="this.style.background='rgba(0,0,0,0.08)';this.style.opacity='0.15';this.style.transform=''"><svg width="48" height="48" viewBox="0 0 64 64"><path d="M8 20 L32 44 L56 20" stroke="rgba(0,0,0,0.7)" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
+
     <div id="output">
       <div class="help">
         <p>Search through the complete NLT Bible (66 books).</p>
