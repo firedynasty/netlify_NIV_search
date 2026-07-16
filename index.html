@@ -320,6 +320,41 @@
       color: #000;
     }
 
+    .context {
+      cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .context:hover {
+      border-left-color: #2979ff;
+    }
+
+    .context.selected {
+      border: 2px solid #2979ff;
+      box-shadow: 0 0 6px rgba(41, 121, 255, 0.3);
+    }
+
+    body.dark-mode .context.selected {
+      border-color: #64b5f6;
+      box-shadow: 0 0 6px rgba(100, 181, 246, 0.3);
+    }
+
+    .context .verse-ref {
+      display: inline-block;
+      background: #2979ff;
+      color: #fff;
+      font-size: 0.8em;
+      font-weight: bold;
+      padding: 1px 6px;
+      border-radius: 3px;
+      margin-left: 6px;
+    }
+
+    body.dark-mode .context .verse-ref {
+      background: #64b5f6;
+      color: #000;
+    }
+
     .loading {
       text-align: center;
       color: #666;
@@ -1691,9 +1726,11 @@
                 <span class="result-book">${result.book}</span>
               </div>
               <div class="result-count">${result.count} matches</div>
-              ${result.contexts.map(ctx =>
-                `<div class="context">${ctx}</div>`
-              ).join('')}
+              ${result.contexts.map(ctx => {
+                const verseMatch = ctx.match(/^<b>\[(\d+)\]<\/b>\s*/);
+                const verse = verseMatch ? verseMatch[1] : '';
+                return `<div class="context" data-chapter="${result.chapter}" data-verse="${verse}" data-book="${result.book}" onclick="selectContext(this)">${ctx}</div>`;
+              }).join('')}
             </div>
           `;
         }
@@ -1707,6 +1744,33 @@
         btn.disabled = false;
         btn.textContent = 'Search';
       }
+    }
+
+    function selectContext(el) {
+      const chapter = el.dataset.chapter;
+      const verse = el.dataset.verse;
+      if (!chapter || !verse) return;
+
+      const ref = `${chapter}:${verse}`;
+      navigator.clipboard.writeText(ref);
+
+      // Highlight briefly
+      const prev = document.querySelector('.context.selected');
+      if (prev) prev.classList.remove('selected');
+      el.classList.add('selected');
+
+      // Show copied toast
+      let toast = document.getElementById('copy-toast');
+      if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'copy-toast';
+        toast.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#333;color:#fff;padding:8px 16px;border-radius:6px;font-size:14px;z-index:9999;transition:opacity 0.3s';
+        document.body.appendChild(toast);
+      }
+      toast.textContent = `Copied ${ref}`;
+      toast.style.opacity = '1';
+      clearTimeout(toast._timer);
+      toast._timer = setTimeout(() => { toast.style.opacity = '0'; }, 1500);
     }
 
     function hymnLookup(num) {

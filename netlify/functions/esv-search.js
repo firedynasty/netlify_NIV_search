@@ -49,6 +49,12 @@ function getCanonicalBookName(bookKey) {
   return info.name;
 }
 
+function findVerseNumber(text, position) {
+  const before = text.slice(0, position);
+  const m = before.match(/(?:^|\n)(\d+)\s[^\n]*$/);
+  return m ? m[1] : null;
+}
+
 function getContext(text, keyword, contextChars = 40) {
   const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const regex = new RegExp(`\\b${escaped}\\b`, 'gi');
@@ -57,6 +63,8 @@ function getContext(text, keyword, contextChars = 40) {
   let match;
 
   while ((match = regex.exec(text)) !== null && contexts.length < 3) {
+    const verseNum = findVerseNumber(text, match.index);
+
     let start = Math.max(0, match.index - contextChars);
     let end = Math.min(text.length, match.index + match[0].length + contextChars);
 
@@ -77,7 +85,8 @@ function getContext(text, keyword, contextChars = 40) {
     const prefix = start > 0 ? '...' : '';
     const suffix = end < text.length ? '...' : '';
     const highlighted = context.replace(regex, '<mark>$&</mark>');
-    contexts.push(`${prefix}${highlighted}${suffix}`);
+    const verseTag = verseNum ? `<b>[${verseNum}]</b> ` : '';
+    contexts.push(`${verseTag}${prefix}${highlighted}${suffix}`);
   }
 
   return contexts;
