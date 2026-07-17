@@ -1190,6 +1190,7 @@
             <option value="revelation">Revelation</option>
           </optgroup>
         </select>
+        <input type="text" id="book-text" placeholder="Book (e.g. heb, gen, ps)" style="flex:0 0 auto;width:180px;">
       </div>
       <div class="button-row">
         <button type="submit" id="searchBtn">Search</button>
@@ -1568,7 +1569,17 @@
       e.preventDefault();
 
       const keyword = document.getElementById('keyword').value.trim();
-      const book = document.getElementById('book').value;
+      const bookTextVal = document.getElementById('book-text').value.trim().toLowerCase();
+      let book;
+      if (bookTextVal) {
+        book = REF_ABBREVS[bookTextVal];
+        if (!book) {
+          document.getElementById('output').innerHTML = `<div class="error">Unknown book: "${bookTextVal}". Try abbreviations like "heb", "gen", "ps".</div>`;
+          return;
+        }
+      } else {
+        book = document.getElementById('book').value;
+      }
       const output = document.getElementById('output');
       const btn = document.getElementById('searchBtn');
 
